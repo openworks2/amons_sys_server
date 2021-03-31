@@ -63,7 +63,10 @@ router.get("/companies", function (req, res, next) { return __awaiter(void 0, vo
                 return [3 /*break*/, 3];
             case 2:
                 error_1 = _a.sent();
-                res.status(404).end();
+                console.error(error_1);
+                res
+                    .status(404)
+                    .json({ status: 404, message: "CallBack Async Function Error" });
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
@@ -90,7 +93,10 @@ router.get("/companies/:index", function (req, res, next) { return __awaiter(voi
                 return [3 /*break*/, 4];
             case 3:
                 error_2 = _a.sent();
-                res.status(404).end();
+                console.error(error_2);
+                res
+                    .status(404)
+                    .json({ status: 404, message: "CallBack Async Function Error" });
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
         }
@@ -126,7 +132,10 @@ router.post("/companies", function (req, res, next) { return __awaiter(void 0, v
                 return [3 /*break*/, 4];
             case 3:
                 error_3 = _a.sent();
-                res.status(404).end();
+                console.error(error_3);
+                res
+                    .status(404)
+                    .json({ status: 404, message: "CallBack Async Function Error" });
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
         }
@@ -163,7 +172,10 @@ router.put("/companies/:index", function (req, res, next) { return __awaiter(voi
                 return [3 /*break*/, 4];
             case 3:
                 error_4 = _a.sent();
-                res.status(404).end();
+                console.error(error_4);
+                res
+                    .status(404)
+                    .json({ status: 404, message: "CallBack Async Function Error" });
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
         }
@@ -190,7 +202,10 @@ router.delete("/companies/:id", function (req, res, next) { return __awaiter(voi
                 return [3 /*break*/, 4];
             case 3:
                 error_5 = _a.sent();
-                res.status(404).end();
+                console.error(error_5);
+                res
+                    .status(404)
+                    .json({ status: 404, message: "CallBack Async Function Error" });
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
         }

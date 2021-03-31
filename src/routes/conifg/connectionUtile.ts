@@ -3,18 +3,21 @@ import queryConfig from "./query/configQuery";
 import { FindAll, FindField, Post, Put, Delete } from "./connectionInterface";
 
 export const getFindALl = ({ table, req, res }: FindAll): Function => {
-  // const _query: string = queryConfig.findByAll(table);
   const _query: string = queryConfig.findByAll(table);
   return () =>
     pool.getConnection((err: any, connection: any) => {
       if (err) {
-        res.status(404).end();
-        throw new Error("Pool getConnection Error!!");
+        console.error(err);
+        res
+          .status(404)
+          .json({ status: 404, message: "Pool getConnection Error" });
       } else {
         connection.query(_query, (err: any, results: any, field: any) => {
           if (err) {
-            res.status(404).end();
-            throw new Error("Connection Query Error!!");
+            console.error(err);
+            res
+              .status(404)
+              .json({ status: 404, message: "Connection Query Error" });
           } else {
             res.json(results);
           }
@@ -35,16 +38,20 @@ export const getFindByField = ({
   return () =>
     pool.getConnection((err: any, connection: any) => {
       if (err) {
-        res.status(404).end();
-        throw new Error("Pool getConnection Error!!");
+        console.error(err);
+        res
+          .status(404)
+          .json({ status: 404, message: "Pool getConnection Error" });
       } else {
         connection.query(
           _query,
           param,
           (err: any, results: any, field: any) => {
             if (err) {
-              res.status(404).end();
-              throw new Error("Connection Query Error!!");
+              console.error(err);
+              res
+                .status(404)
+                .json({ status: 404, message: "Connection Query Error" });
             } else {
               res.json(results);
             }
@@ -66,16 +73,20 @@ export const postInsert = ({
   return () =>
     pool.getConnection((err: any, connection: any) => {
       if (err) {
-        res.status(404).end();
-        throw new Error("Pool getConnection Error!!");
+        console.error(err);
+        res
+          .status(404)
+          .json({ status: 404, message: "Pool getConnection Error" });
       } else {
         connection.query(
           _query,
           insertData,
           (err: any, results: any, field: any) => {
             if (err) {
-              res.status(404).end();
-              throw new Error("Connection Query Error!!");
+              console.error(err);
+              res
+                .status(404)
+                .json({ status: 404, message: "Connection Query Error" });
             } else {
               const resObj: object = {
                 ...insertData,
@@ -101,16 +112,20 @@ export const putUpdate = ({
   return () =>
     pool.getConnection((err: any, connection: any) => {
       if (err) {
-        res.status(404).end();
-        throw new Error("Pool getConnection Error!!");
+        console.error(err);
+        res
+          .status(404)
+          .json({ status: 404, message: "Pool getConnection Error" });
       } else {
         connection.query(
           _query,
           updateData,
           (err: any, results: any, field: any) => {
             if (err) {
-              res.status(404).end();
-              throw new Error("Connection Query Error!!");
+              console.error(err);
+              res
+                .status(404)
+                .json({ status: 404, message: "Connection Query Error" });
             } else {
               const resObj = {
                 ...updateData[0],
@@ -135,16 +150,19 @@ export const deleteAction = ({
   return () =>
     pool.getConnection((err: any, connection: any) => {
       if (err) {
-        res.status(404).end();
-        throw new Error("Pool getConnection Error!!");
+        res
+          .status(404)
+          .json({ status: 404, message: "Pool getConnection Error" });
       } else {
         connection.query(
           _query,
           param,
           (err: any, results: any, field: any) => {
             if (err) {
-              res.status(404).end();
-              throw new Error("Connection Query Error!!");
+              console.error(err);
+              res
+                .status(404)
+                .json({ status: 404, message: "Connection Query Error" });
             } else {
               const result: object = {
                 ...results,

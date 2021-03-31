@@ -1,8 +1,6 @@
 import express, { Request, Response, NextFunction } from "express";
 const router = express.Router();
-import pool from "./conifg/connectionPool";
 import indexCreateFn from "./lib/fillZero";
-import queryConfig from "./conifg/query/configQuery";
 import {
   deleteAction,
   getFindALl,
@@ -26,9 +24,11 @@ router.get(
         req,
         res,
       })();
-      // findByFieldUtile();
     } catch (error) {
-      res.status(404).end();
+      console.error(error);
+      res
+        .status(404)
+        .json({ status: 404, message: "CallBack Async Function Error" });
     }
   }
 );
@@ -45,9 +45,11 @@ router.get(
         req,
         res,
       })();
-      // findByFieldUtile();
     } catch (error) {
-      res.status(404).end();
+      console.error(error);
+      res
+        .status(404)
+        .json({ status: 404, message: "CallBack Async Function Error" });
     }
   }
 );
@@ -56,13 +58,7 @@ router.post(
   "/locals",
   async (req: Request, res: Response, next: NextFunction) => {
     const { body: reqBody } = req;
-    const {
-      // local_index,
-      local_name,
-      plan_length,
-      local_process,
-      desciption,
-    } = reqBody;
+    const { local_name, plan_length, local_process } = reqBody;
 
     const _localIndex = indexCreateFn("LC");
 
@@ -83,7 +79,10 @@ router.post(
         res,
       })();
     } catch (error) {
-      res.status(404).end();
+      console.error(error);
+      res
+        .status(404)
+        .json({ status: 404, message: "CallBack Async Function Error" });
     }
   }
 );
@@ -93,7 +92,7 @@ router.put(
   async (req: Request, res: Response, next: NextFunction) => {
     const { index } = req.params;
     const { body: reqBody } = req;
-    const { local_name, plan_length, local_process, desciption } = reqBody;
+    const { local_name, plan_length, local_process } = reqBody;
 
     const data: object = {
       modified_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
@@ -114,7 +113,10 @@ router.put(
         res,
       })();
     } catch (error) {
-      res.status(404).end();
+      console.error(error);
+      res
+        .status(404)
+        .json({ status: 404, message: "CallBack Async Function Error" });
     }
   }
 );
@@ -132,7 +134,10 @@ router.delete(
         res,
       })();
     } catch (error) {
-      res.status(404).end();
+      console.error(error);
+      res
+        .status(404)
+        .json({ status: 404, message: "CallBack Async Function Error" });
     }
   }
 );

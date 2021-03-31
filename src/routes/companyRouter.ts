@@ -25,9 +25,11 @@ router.get(
         req,
         res,
       })();
-      // findByFieldUtile();
     } catch (error) {
-      res.status(404).end();
+      console.error(error);
+      res
+        .status(404)
+        .json({ status: 404, message: "CallBack Async Function Error" });
     }
   }
 );
@@ -46,7 +48,10 @@ router.get(
       })();
       // findByFieldUtile();
     } catch (error) {
-      res.status(404).end();
+      console.error(error);
+      res
+        .status(404)
+        .json({ status: 404, message: "CallBack Async Function Error" });
     }
   }
 );
@@ -75,7 +80,10 @@ router.post(
         res,
       })();
     } catch (error) {
-      res.status(404).end();
+      console.error(error);
+      res
+        .status(404)
+        .json({ status: 404, message: "CallBack Async Function Error" });
     }
   }
 );
@@ -106,7 +114,10 @@ router.put(
         res,
       })();
     } catch (error) {
-      res.status(404).end();
+      console.error(error);
+      res
+        .status(404)
+        .json({ status: 404, message: "CallBack Async Function Error" });
     }
   }
 );
@@ -124,7 +135,10 @@ router.delete(
         res,
       })();
     } catch (error) {
-      res.status(404).end();
+      console.error(error);
+      res
+        .status(404)
+        .json({ status: 404, message: "CallBack Async Function Error" });
     }
   }
 );

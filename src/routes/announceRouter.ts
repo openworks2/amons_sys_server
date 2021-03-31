@@ -1,8 +1,6 @@
 import express, { Request, Response, NextFunction } from "express";
 const router = express.Router();
 
-import indexCreateFn from "./lib/fillZero";
-
 import {
   deleteAction,
   getFindALl,
@@ -28,7 +26,8 @@ router.get(
       })();
       // findByFieldUtile();
     } catch (error) {
-      res.status(404).end();
+      console.error(error);
+      res.status(404).json({ status: 404, message: "CallBack Function Error" });
     }
   }
 );
@@ -76,7 +75,8 @@ router.post(
         res,
       })();
     } catch (error) {
-      res.status(404).end();
+      console.error(error);
+      res.status(404).json({ status: 404, message: "CallBack Function Error" });
     }
   }
 );
@@ -109,7 +109,8 @@ router.put(
         res,
       })();
     } catch (error) {
-      res.status(404).end();
+      console.error(error);
+      res.status(404).json({ status: 404, message: "CallBack Function Error" });
     }
   }
 );
@@ -127,7 +128,8 @@ router.delete(
         res,
       })();
     } catch (error) {
-      res.status(404).end();
+      console.error(error);
+      res.status(404).json({ status: 404, message: "CallBack Function Error" });
     }
   }
 );

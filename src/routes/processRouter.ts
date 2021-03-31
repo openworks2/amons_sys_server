@@ -1,8 +1,12 @@
 import express, { Request, Response, NextFunction } from "express";
 const router = express.Router();
-
-import pool from "./conifg/connectionPool";
-import queryConfig from "./conifg/query/configQuery";
+import {
+  deleteAction,
+  getFindALl,
+  getFindByField,
+  postInsert,
+  putUpdate,
+} from "./conifg/connectionUtile";
 
 const moment = require("moment");
 require("moment-timezone");
@@ -10,99 +14,77 @@ moment.tz.setDefault("Asiz/Seoul");
 
 const LOG_PROCESS: string = "log_process";
 
-router.get("/processes", (req: Request, res: Response, next: NextFunction) => {
-  const _query = queryConfig.findByAll(LOG_PROCESS);
-  pool.getConnection((err: any, connection: any) => {
-    if (err) {
-      res.status(404).end();
-      throw new Error("Pool getConnection Error!!");
-    } else {
-      connection.query(_query, (err: any, results: any, field: any) => {
-        if (err) {
-          res.status(404).end();
-          throw new Error("Connection Query Error!!");
-        } else {
-          res.json(results);
-        }
-      });
-    }
-    connection.release();
-  });
-});
-
 router.get(
-  "/processes/:index",
-  (req: Request, res: Response, next: NextFunction) => {
-    const { index } = req.params;
-    const _query = queryConfig.findByField(LOG_PROCESS, "pcs_seq");
-
-    pool.getConnection((err: any, connection: any) => {
-      if (err) {
-        res.status(404).end();
-        throw new Error("Pool getConnection Error!!");
-      } else {
-        connection.query(
-          _query,
-          index,
-          (err: any, results: any, field: any) => {
-            if (err) {
-              res.status(404).end();
-              throw new Error("Connection Query Error!!");
-            } else {
-              res.json(results);
-            }
-          }
-        );
-      }
-      connection.release();
-    });
+  "/processes",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await getFindALl({
+        table: LOG_PROCESS,
+        req,
+        res,
+      })();
+    } catch (error) {
+      console.error(error);
+      res
+        .status(404)
+        .json({ status: 404, message: "CallBack Async Function Error" });
+    }
   }
 );
 
-router.post("/processes", (req: Request, res: Response, next: NextFunction) => {
-  const { body: reqBody } = req;
-  const { pcs_state, local_index } = reqBody;
-
-  const InsertData = {
-    created_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
-    pcs_state,
-    local_index,
-  };
-
-  const _query = queryConfig.insert(LOG_PROCESS);
-
-  console.log(InsertData);
-
-  pool.getConnection((err: any, connection: any) => {
-    if (err) {
-      res.status(404).end();
-      throw new Error("Pool getConnection Error!!");
-    } else {
-      connection.query(
-        _query,
-        InsertData,
-        (err: any, results: any, field: any) => {
-          if (err) {
-            res.status(404).end();
-            throw new Error("Connection Query Error!!");
-          } else {
-            const resObj: object = {
-              ...reqBody,
-              dig_seq: results.insertId ,
-              created_date: InsertData.created_date,
-            };
-            res.json(resObj);
-          }
-        }
-      );
+router.get(
+  "/processes/:index",
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { index: param } = req.params;
+    try {
+      await getFindByField({
+        table: LOG_PROCESS,
+        param,
+        field: "pcs_seq",
+        req,
+        res,
+      })();
+    } catch (error) {
+      console.error(error);
+      res
+        .status(404)
+        .json({ status: 404, message: "CallBack Async Function Error" });
     }
-    connection.release();
-  });
-});
+  }
+);
+
+router.post(
+  "/processes",
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { body: reqBody } = req;
+    const { pcs_state, local_index } = reqBody;
+
+    const insertData = {
+      created_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
+      pcs_state,
+      local_index,
+    };
+
+    try {
+      await postInsert({
+        table: LOG_PROCESS,
+        insertData,
+        key: "pcs_seq",
+        req,
+        res,
+      })();
+    } catch (error) {
+      console.error(error);
+      res
+        .status(404)
+        .json({ status: 404, message: "CallBack Async Function Error" });
+    }
+  }
+);
 
 router.put(
   "/processes/:index",
-  (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     const { index } = req.params;
     const { body: reqBody } = req;
     const { pcs_state, local_index } = reqBody;
@@ -112,64 +94,46 @@ router.put(
       pcs_state,
       local_index,
     };
+    console.log("update-->", data);
+    const updateData: (object | string)[] = [];
+    updateData[0] = data;
+    updateData[1] = index;
 
-    const UpdataData: (object | string)[] = [];
-    UpdataData[0] = data;
-    UpdataData[1] = index;
-
-    console.log(UpdataData);
-    const _query = queryConfig.update(LOG_PROCESS, "pcs_seq");
-
-    pool.getConnection((err: any, connection: any) => {
-      if (err) {
-        res.status(404).end();
-        throw new Error("Pool getConnection Error!!");
-      } else {
-        connection.query(
-          _query,
-          UpdataData,
-          (err: any, results: any, field: any) => {
-            if (err) {
-              res.status(404).end();
-              throw new Error("Connection Query Error!!");
-            } else {
-              console.log("results->>", results);
-              console.log("field-->", field);
-              res.json(reqBody);
-            }
-          }
-        );
-      }
-      connection.release();
-    });
+    try {
+      await putUpdate({
+        table: LOG_PROCESS,
+        field: "pcs_seq",
+        updateData,
+        req,
+        res,
+      })();
+    } catch (error) {
+      console.error(error);
+      res
+        .status(404)
+        .json({ status: 404, message: "CallBack Async Function Error" });
+    }
   }
 );
 
 router.delete(
   "/processes/:id",
-  (req: Request, res: Response, next: NextFunction) => {
-    const { id } = req.params;
-    const _query = queryConfig.delete(LOG_PROCESS, "pcs_seq");
-    pool.getConnection((err: any, connection: any) => {
-      if (err) {
-        res.status(404).end();
-        throw new Error("Pool getConnection Error!!");
-      } else {
-        connection.query(_query, id, (err: any, results: any, field: any) => {
-          if (err) {
-            res.status(404).end();
-            throw new Error("Connection Query Error!!");
-          } else {
-            const result: object = {
-              ...results,
-              id,
-            };
-            res.json(result);
-          }
-        });
-      }
-      connection.release();
-    });
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { id: param } = req.params;
+    try {
+      await deleteAction({
+        table: LOG_PROCESS,
+        field: "pcs_seq",
+        param,
+        req,
+        res,
+      })();
+    } catch (error) {
+      console.error(error);
+      res
+        .status(404)
+        .json({ status: 404, message: "CallBack Async Function Error" });
+    }
   }
 );
 

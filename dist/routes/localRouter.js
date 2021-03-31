@@ -63,7 +63,10 @@ router.get("/locals", function (req, res, next) { return __awaiter(void 0, void 
                 return [3 /*break*/, 3];
             case 2:
                 error_1 = _a.sent();
-                res.status(404).end();
+                console.error(error_1);
+                res
+                    .status(404)
+                    .json({ status: 404, message: "CallBack Async Function Error" });
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
@@ -90,21 +93,22 @@ router.get("/locals/:index", function (req, res, next) { return __awaiter(void 0
                 return [3 /*break*/, 4];
             case 3:
                 error_2 = _a.sent();
-                res.status(404).end();
+                console.error(error_2);
+                res
+                    .status(404)
+                    .json({ status: 404, message: "CallBack Async Function Error" });
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
         }
     });
 }); });
 router.post("/locals", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var reqBody, 
-    // local_index,
-    local_name, plan_length, local_process, desciption, _localIndex, insertData, error_3;
+    var reqBody, local_name, plan_length, local_process, _localIndex, insertData, error_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 reqBody = req.body;
-                local_name = reqBody.local_name, plan_length = reqBody.plan_length, local_process = reqBody.local_process, desciption = reqBody.desciption;
+                local_name = reqBody.local_name, plan_length = reqBody.plan_length, local_process = reqBody.local_process;
                 _localIndex = fillZero_1.default("LC");
                 insertData = {
                     created_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
@@ -128,20 +132,23 @@ router.post("/locals", function (req, res, next) { return __awaiter(void 0, void
                 return [3 /*break*/, 4];
             case 3:
                 error_3 = _a.sent();
-                res.status(404).end();
+                console.error(error_3);
+                res
+                    .status(404)
+                    .json({ status: 404, message: "CallBack Async Function Error" });
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
         }
     });
 }); });
 router.put("/locals/:index", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var index, reqBody, local_name, plan_length, local_process, desciption, data, updateData, error_4;
+    var index, reqBody, local_name, plan_length, local_process, data, updateData, error_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 index = req.params.index;
                 reqBody = req.body;
-                local_name = reqBody.local_name, plan_length = reqBody.plan_length, local_process = reqBody.local_process, desciption = reqBody.desciption;
+                local_name = reqBody.local_name, plan_length = reqBody.plan_length, local_process = reqBody.local_process;
                 data = {
                     modified_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
                     local_name: local_name,
@@ -166,7 +173,10 @@ router.put("/locals/:index", function (req, res, next) { return __awaiter(void 0
                 return [3 /*break*/, 4];
             case 3:
                 error_4 = _a.sent();
-                res.status(404).end();
+                console.error(error_4);
+                res
+                    .status(404)
+                    .json({ status: 404, message: "CallBack Async Function Error" });
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
         }
@@ -193,7 +203,10 @@ router.delete("/locals/:id", function (req, res, next) { return __awaiter(void 0
                 return [3 /*break*/, 4];
             case 3:
                 error_5 = _a.sent();
-                res.status(404).end();
+                console.error(error_5);
+                res
+                    .status(404)
+                    .json({ status: 404, message: "CallBack Async Function Error" });
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
         }

@@ -15,6 +15,11 @@ import pool from "./conifg/connectionPool";
 import queryConfig from "./conifg/query/configQuery";
 
 import dbconfig from "./conifg/database";
+import {
+  deleteAction,
+  getFindALl,
+  getFindByField,
+} from "./conifg/connectionUtile";
 const sessionStore = new MySQLStore(dbconfig);
 router.use(
   session({
@@ -43,61 +48,53 @@ interface ResponseData {
   status: string;
   message: string;
   validated: boolean; // 계정 체크
-  logined: boolean; // 로근인 상태
+  logined: boolean; // 로그인 상태
   data: result | null;
 }
 
 const TB_ACCOUNT: string = "tb_account";
 
 // 계정 조회 (method: GET)
-router.get("/accounts", (req: Request, res: Response, next: NextFunction) => {
-  const _query = queryConfig.findByAll(TB_ACCOUNT);
+router.get(
+  "/accounts",
+  async (req: Request, res: Response, next: NextFunction) => {
+    const _query = queryConfig.findByAll(TB_ACCOUNT);
 
-  pool.getConnection((err: any, connection: any) => {
-    if (err) {
-      res.status(404).end();
-      throw new Error("Pool getConnection Error!!");
-    } else {
-      connection.query(_query, (err: any, results: any, field: any) => {
-        if (err) {
-          res.status(404).end();
-          throw new Error("Connection Query Error!!");
-        } else {
-          res.json(results);
-        }
-      });
+    try {
+      await getFindALl({
+        table: TB_ACCOUNT,
+        req,
+        res,
+      })();
+    } catch (error) {
+      console.error(error);
+      res
+        .status(404)
+        .json({ status: 404, message: "CallBack Async Function Error" });
     }
-    connection.release();
-  });
-});
+  }
+);
 
 // 계정 1개 조회 (method: GET)
 router.get(
   "/accounts/:index",
-  (req: Request, res: Response, next: NextFunction) => {
-    const { index } = req.params;
-    const _query = queryConfig.findByField(TB_ACCOUNT, "acc_id");
-
-    pool.getConnection((err: any, connection: any) => {
-      if (err) {
-        res.status(404).end();
-        throw new Error("Pool getConnection Error!!");
-      } else {
-        connection.query(
-          _query,
-          index,
-          (err: any, results: any, field: any) => {
-            if (err) {
-              res.status(404).end();
-              throw new Error("Connection Query Error!!");
-            } else {
-              res.json(results);
-            }
-          }
-        );
-      }
-      connection.release();
-    });
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { index: param } = req.params;
+    try {
+      await getFindByField({
+        table: TB_ACCOUNT,
+        param,
+        field: "acc_id",
+        req,
+        res,
+      })();
+      // findByFieldUtile();
+    } catch (error) {
+      console.error(error);
+      res
+        .status(404)
+        .json({ status: 404, message: "CallBack Async Function Error" });
+    }
   }
 );
 // 계정 등록 (method: POST)
@@ -137,16 +134,20 @@ router.post("/accounts", (req: Request, res: Response, next: NextFunction) => {
 
   pool.getConnection((err: any, connection: any) => {
     if (err) {
-      res.status(404).end();
-      throw new Error("Pool getConnection Error!!");
+      console.error(err);
+      res
+        .status(404)
+        .json({ status: 404, message: "Pool getConnection Error" });
     } else {
       connection.query(
         _query,
         InsertData,
         (err: any, results: any, field: any) => {
           if (err) {
-            res.status(404).end();
-            throw new Error("Connection Query Error!!");
+            console.error(err);
+            res
+              .status(404)
+              .json({ status: 404, message: "Connection Query Error" });
           } else {
             const resObj: result = {
               created_date: InsertData.created_date,
@@ -172,29 +173,22 @@ router.post("/accounts", (req: Request, res: Response, next: NextFunction) => {
 // 계정 삭제 (method: DELETE)
 router.delete(
   "/accounts/:id",
-  (req: Request, res: Response, next: NextFunction) => {
-    const { id } = req.params;
-    const _query = queryConfig.delete(TB_ACCOUNT, "acc_id");
-    pool.getConnection((err: any, connection: any) => {
-      if (err) {
-        res.status(404).end();
-        throw new Error("Pool getConnection Error!!");
-      } else {
-        connection.query(_query, id, (err: any, results: any, field: any) => {
-          if (err) {
-            res.status(404).end();
-            throw new Error("Connection Query Error!!");
-          } else {
-            const result: object = {
-              ...results,
-              id,
-            };
-            res.json(result);
-          }
-        });
-      }
-      connection.release();
-    });
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { id: param } = req.params;
+    try {
+      await deleteAction({
+        table: TB_ACCOUNT,
+        field: "acc_id",
+        param,
+        req,
+        res,
+      })();
+    } catch (error) {
+      console.error(error);
+      res
+        .status(404)
+        .json({ status: 404, message: "CallBack Async Function Error" });
+    }
   }
 );
 
@@ -202,10 +196,7 @@ router.delete(
 router.post("/login", (req: Request, res: Response, next: NextFunction) => {
   const { body: reqBody } = req;
   const { acc_user_id, acc_password } = reqBody;
-  console.log(reqBody);
-  console.log(req.session);
   const _query = queryConfig.findByField(TB_ACCOUNT, "acc_user_id");
-  console.log(_query);
   pool.getConnection((err: any, connection: any) => {
     if (err) {
     } else {
@@ -316,16 +307,20 @@ router.post(
     const query = queryConfig.doubleCheck();
     pool.getConnection((err: any, connection: any) => {
       if (err) {
-        res.status(err.status).end();
-        throw new Error("Response Error!!");
+        console.error(err);
+        res
+          .status(404)
+          .json({ status: 404, message: "Pool getConnection Error" });
       } else {
         connection.query(
           query,
           userID,
           (err: any, results: any, field: any) => {
             if (err) {
-              res.status(404).end();
-              throw err;
+              console.error(err);
+              res
+                .status(404)
+                .json({ status: 404, message: "Connection Query Error" });
             } else {
               const { count } = results[0];
               const resData: object = {
@@ -344,12 +339,10 @@ router.post(
 
 // 로그인 체크
 router.get("/check", (req, res) => {
-
   sessionStore.get(req.sessionID, (error, session) => {
-    
     console.log("session->", session);
     const resObj: object = {
-      validated: req.session.hasOwnProperty('login') ? true : false,
+      validated: req.session.hasOwnProperty("login") ? true : false,
     };
     res.setHeader("Access-Control-Allow-Credentials", "true");
     res.json(resObj);

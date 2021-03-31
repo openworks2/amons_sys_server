@@ -1,9 +1,12 @@
 import express, { Request, Response, NextFunction } from "express";
 const router = express.Router();
-
-import pool from "./conifg/connectionPool";
-import indexCreateFn from "./lib/fillZero";
-import queryConfig from "./conifg/query/configQuery";
+import {
+  deleteAction,
+  getFindALl,
+  getFindByField,
+  postInsert,
+  putUpdate,
+} from "./conifg/connectionUtile";
 
 const moment = require("moment");
 require("moment-timezone");
@@ -11,99 +14,74 @@ moment.tz.setDefault("Asiz/Seoul");
 
 const LOG_DIG: string = "log_dig";
 
-router.get("/digs", (req: Request, res: Response, next: NextFunction) => {
-  const _query = queryConfig.findByAll(LOG_DIG);
-
-  
-  pool.getConnection((err: any, connection: any) => {
-    if (err) {
-      res.status(404).end();
-      throw new Error("Pool getConnection Error!!");
-    } else {
-      connection.query(_query, (err: any, results: any, field: any) => {
-        if (err) {
-          res.status(404).end();
-          throw new Error("Connection Query Error!!");
-        } else {
-          res.json(results);
-        }
-      });
-    }
-    connection.release();
-  });
+router.get("/digs", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    await getFindALl({
+      table: LOG_DIG,
+      req,
+      res,
+    })();
+  } catch (error) {
+    console.error(error);
+    res
+      .status(404)
+      .json({ status: 404, message: "CallBack Async Function Error" });
+  }
 });
 
 router.get(
   "/digs/:index",
-  (req: Request, res: Response, next: NextFunction) => {
-    const { index } = req.params;
-    const _query = queryConfig.findByField(LOG_DIG, "dig_seq");
-
-    pool.getConnection((err: any, connection: any) => {
-      if (err) {
-        res.status(404).end();
-        throw new Error("Pool getConnection Error!!");
-      } else {
-        connection.query(
-          _query,
-          index,
-          (err: any, results: any, field: any) => {
-            if (err) {
-              res.status(404).end();
-              throw new Error("Connection Query Error!!");
-            } else {
-              res.json(results);
-            }
-          }
-        );
-      }
-      connection.release();
-    });
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { index: param } = req.params;
+    try {
+      await getFindByField({
+        table: LOG_DIG,
+        param,
+        field: "dig_seq",
+        req,
+        res,
+      })();
+    } catch (error) {
+      console.error(error);
+      res
+        .status(404)
+        .json({ status: 404, message: "CallBack Async Function Error" });
+    }
   }
 );
 
-router.post("/digs", (req: Request, res: Response, next: NextFunction) => {
-  const { body: reqBody } = req;
-  const { dig_length, local_index } = reqBody;
+router.post(
+  "/digs",
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { body: reqBody } = req;
+    const { dig_length, local_index } = reqBody;
 
-  const InsertData = {
-    created_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
-    dig_length,
-    local_index,
-  };
+    const insertData = {
+      created_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
+      dig_length,
+      local_index,
+    };
 
-  const _query = queryConfig.insert(LOG_DIG);
-
-  pool.getConnection((err: any, connection: any) => {
-    if (err) {
-      res.status(404).end();
-      throw new Error("Pool getConnection Error!!");
-    } else {
-      connection.query(
-        _query,
-        InsertData,
-        (err: any, results: any, field: any) => {
-          if (err) {
-            res.status(404).end();
-            throw new Error("Connection Query Error!!");
-          } else {
-            const resObj: object = {
-              ...reqBody,
-              dig_seq: results.insertId,
-              created_date: InsertData.created_date,
-            };
-            res.json(resObj);
-          }
-        }
-      );
+    try {
+      await postInsert({
+        table: LOG_DIG,
+        insertData,
+        key: "dig_seq",
+        req,
+        res,
+      })();
+    } catch (error) {
+      console.error(error);
+      res
+        .status(404)
+        .json({ status: 404, message: "CallBack Async Function Error" });
     }
-    connection.release();
-  });
-});
+  }
+);
 
 router.put(
   "/digs/:index",
-  (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     const { index } = req.params;
     const { body: reqBody } = req;
     const { dig_length, local_index } = reqBody;
@@ -114,62 +92,45 @@ router.put(
       local_index,
     };
 
-    const UpdataData: (object | string)[] = [];
-    UpdataData[0] = data;
-    UpdataData[1] = index;
+    const updateData: (object | string)[] = [];
+    updateData[0] = data;
+    updateData[1] = index;
 
-    const _query = queryConfig.update(LOG_DIG, "dig_seq");
-
-    pool.getConnection((err: any, connection: any) => {
-      if (err) {
-        res.status(404).end();
-        throw new Error("Pool getConnection Error!!");
-      } else {
-        connection.query(
-          _query,
-          UpdataData,
-          (err: any, results: any, field: any) => {
-            if (err) {
-              res.status(404).end();
-              throw new Error("Connection Query Error!!");
-            } else {
-              console.log("results->>", results);
-              console.log("field-->", field);
-              res.json(reqBody);
-            }
-          }
-        );
-      }
-      connection.release();
-    });
+    try {
+      await putUpdate({
+        table: LOG_DIG,
+        field: "dig_seq",
+        updateData,
+        req,
+        res,
+      })();
+    } catch (error) {
+      console.error(error);
+      res
+        .status(404)
+        .json({ status: 404, message: "CallBack Async Function Error" });
+    }
   }
 );
 
 router.delete(
   "/digs/:id",
-  (req: Request, res: Response, next: NextFunction) => {
-    const { id } = req.params;
-    const _query = queryConfig.delete(LOG_DIG, "dig_seq");
-    pool.getConnection((err: any, connection: any) => {
-      if (err) {
-        res.status(404).end();
-        throw new Error("Pool getConnection Error!!");
-      } else {
-        connection.query(_query, id, (err: any, results: any, field: any) => {
-          if (err) {
-            res.status(404).end();
-            throw new Error("Connection Query Error!!");
-          } else {
-            const result: object = {
-              ...results,
-              id,
-            };
-            res.json(result);
-          }
-        });
-      }
-      connection.release();
-    });
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { id: param } = req.params;
+    try {
+      await deleteAction({
+        table: LOG_DIG,
+        field: "dig_seq",
+        param,
+        req,
+        res,
+      })();
+    } catch (error) {
+      console.error(error);
+      res
+        .status(404)
+        .json({ status: 404, message: "CallBack Async Function Error" });
+    }
   }
 );
 

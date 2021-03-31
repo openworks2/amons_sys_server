@@ -19,19 +19,22 @@ var connectionPool_1 = __importDefault(require("./connectionPool"));
 var configQuery_1 = __importDefault(require("./query/configQuery"));
 var getFindALl = function (_a) {
     var table = _a.table, req = _a.req, res = _a.res;
-    // const _query: string = queryConfig.findByAll(table);
     var _query = configQuery_1.default.findByAll(table);
     return function () {
         return connectionPool_1.default.getConnection(function (err, connection) {
             if (err) {
-                res.status(404).end();
-                throw new Error("Pool getConnection Error!!");
+                console.error(err);
+                res
+                    .status(404)
+                    .json({ status: 404, message: "Pool getConnection Error" });
             }
             else {
                 connection.query(_query, function (err, results, field) {
                     if (err) {
-                        res.status(404).end();
-                        throw new Error("Connection Query Error!!");
+                        console.error(err);
+                        res
+                            .status(404)
+                            .json({ status: 404, message: "Connection Query Error" });
                     }
                     else {
                         res.json(results);
@@ -49,14 +52,18 @@ var getFindByField = function (_a) {
     return function () {
         return connectionPool_1.default.getConnection(function (err, connection) {
             if (err) {
-                res.status(404).end();
-                throw new Error("Pool getConnection Error!!");
+                console.error(err);
+                res
+                    .status(404)
+                    .json({ status: 404, message: "Pool getConnection Error" });
             }
             else {
                 connection.query(_query, param, function (err, results, field) {
                     if (err) {
-                        res.status(404).end();
-                        throw new Error("Connection Query Error!!");
+                        console.error(err);
+                        res
+                            .status(404)
+                            .json({ status: 404, message: "Connection Query Error" });
                     }
                     else {
                         res.json(results);
@@ -74,15 +81,19 @@ var postInsert = function (_a) {
     return function () {
         return connectionPool_1.default.getConnection(function (err, connection) {
             if (err) {
-                res.status(404).end();
-                throw new Error("Pool getConnection Error!!");
+                console.error(err);
+                res
+                    .status(404)
+                    .json({ status: 404, message: "Pool getConnection Error" });
             }
             else {
                 connection.query(_query, insertData, function (err, results, field) {
                     var _a;
                     if (err) {
-                        res.status(404).end();
-                        throw new Error("Connection Query Error!!");
+                        console.error(err);
+                        res
+                            .status(404)
+                            .json({ status: 404, message: "Connection Query Error" });
                     }
                     else {
                         var resObj = __assign(__assign({}, insertData), (_a = {}, _a[key] = results.insertId, _a));
@@ -101,14 +112,18 @@ var putUpdate = function (_a) {
     return function () {
         return connectionPool_1.default.getConnection(function (err, connection) {
             if (err) {
-                res.status(404).end();
-                throw new Error("Pool getConnection Error!!");
+                console.error(err);
+                res
+                    .status(404)
+                    .json({ status: 404, message: "Pool getConnection Error" });
             }
             else {
                 connection.query(_query, updateData, function (err, results, field) {
                     if (err) {
-                        res.status(404).end();
-                        throw new Error("Connection Query Error!!");
+                        console.error(err);
+                        res
+                            .status(404)
+                            .json({ status: 404, message: "Connection Query Error" });
                     }
                     else {
                         var resObj = __assign({}, updateData[0]);
@@ -127,14 +142,17 @@ var deleteAction = function (_a) {
     return function () {
         return connectionPool_1.default.getConnection(function (err, connection) {
             if (err) {
-                res.status(404).end();
-                throw new Error("Pool getConnection Error!!");
+                res
+                    .status(404)
+                    .json({ status: 404, message: "Pool getConnection Error" });
             }
             else {
                 connection.query(_query, param, function (err, results, field) {
                     if (err) {
-                        res.status(404).end();
-                        throw new Error("Connection Query Error!!");
+                        console.error(err);
+                        res
+                            .status(404)
+                            .json({ status: 404, message: "Connection Query Error" });
                     }
                     else {
                         var result = __assign(__assign({}, results), { param: param });
