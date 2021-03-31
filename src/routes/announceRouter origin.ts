@@ -9,12 +9,10 @@ const moment = require("moment");
 require("moment-timezone");
 moment.tz.setDefault("Asiz/Seoul");
 
-const LOG_DIG: string = "log_dig";
+const INFO_ANNOUNCE: string = "info_announce";
 
-router.get("/digs", (req: Request, res: Response, next: NextFunction) => {
-  const _query = queryConfig.findByAll(LOG_DIG);
-
-  
+router.get("/announces", (req: Request, res: Response, next: NextFunction) => {
+  const _query = queryConfig.findByAll(INFO_ANNOUNCE);
   pool.getConnection((err: any, connection: any) => {
     if (err) {
       res.status(404).end();
@@ -34,10 +32,10 @@ router.get("/digs", (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.get(
-  "/digs/:index",
+  "/announces/:index",
   (req: Request, res: Response, next: NextFunction) => {
     const { index } = req.params;
-    const _query = queryConfig.findByField(LOG_DIG, "dig_seq");
+    const _query = queryConfig.findByField(INFO_ANNOUNCE, "ann_id");
 
     pool.getConnection((err: any, connection: any) => {
       if (err) {
@@ -62,17 +60,20 @@ router.get(
   }
 );
 
-router.post("/digs", (req: Request, res: Response, next: NextFunction) => {
+router.post("/announces", (req: Request, res: Response, next: NextFunction) => {
   const { body: reqBody } = req;
-  const { dig_length, local_index } = reqBody;
+  console.log(req.body);
+  const { ann_title, ann_contents, ann_writer, ann_preview } = reqBody;
 
   const InsertData = {
     created_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
-    dig_length,
-    local_index,
+    ann_title,
+    ann_contents,
+    ann_writer,
+    ann_preview,
   };
 
-  const _query = queryConfig.insert(LOG_DIG);
+  const _query = queryConfig.insert(INFO_ANNOUNCE);
 
   pool.getConnection((err: any, connection: any) => {
     if (err) {
@@ -89,7 +90,7 @@ router.post("/digs", (req: Request, res: Response, next: NextFunction) => {
           } else {
             const resObj: object = {
               ...reqBody,
-              dig_seq: results.insertId,
+              ann_id: results.insertId,
               created_date: InsertData.created_date,
             };
             res.json(resObj);
@@ -102,23 +103,25 @@ router.post("/digs", (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.put(
-  "/digs/:index",
+  "/announces/:index",
   (req: Request, res: Response, next: NextFunction) => {
     const { index } = req.params;
     const { body: reqBody } = req;
-    const { dig_length, local_index } = reqBody;
+    const { ann_title, ann_contents, ann_writer, ann_preview } = reqBody;
 
     const data: object = {
       modified_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
-      dig_length,
-      local_index,
+      ann_title,
+      ann_contents,
+      ann_writer,
+      ann_preview,
     };
 
     const UpdataData: (object | string)[] = [];
     UpdataData[0] = data;
     UpdataData[1] = index;
 
-    const _query = queryConfig.update(LOG_DIG, "dig_seq");
+    const _query = queryConfig.update(INFO_ANNOUNCE, "ann_id");
 
     pool.getConnection((err: any, connection: any) => {
       if (err) {
@@ -133,9 +136,11 @@ router.put(
               res.status(404).end();
               throw new Error("Connection Query Error!!");
             } else {
-              console.log("results->>", results);
-              console.log("field-->", field);
-              res.json(reqBody);
+              const resObj = {
+                ...reqBody,
+                modified_date: data["modified_date"],
+              };
+              res.json(resObj);
             }
           }
         );
@@ -146,10 +151,10 @@ router.put(
 );
 
 router.delete(
-  "/digs/:id",
+  "/announces/:id",
   (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
-    const _query = queryConfig.delete(LOG_DIG, "dig_seq");
+    const _query = queryConfig.delete(INFO_ANNOUNCE, "ann_id");
     pool.getConnection((err: any, connection: any) => {
       if (err) {
         res.status(404).end();

@@ -25,7 +25,7 @@ var session = require("express-session");
 var MySQLStore = require("express-mysql-session");
 var connectionPool_1 = __importDefault(require("./conifg/connectionPool"));
 // import indexCreateFn from "./lib/fillZero";
-var configQuery_1 = __importDefault(require("./query/configQuery"));
+var configQuery_1 = __importDefault(require("./conifg/query/configQuery"));
 var database_1 = __importDefault(require("./conifg/database"));
 var sessionStore = new MySQLStore(database_1.default);
 router.use(session({

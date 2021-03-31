@@ -1,20 +1,17 @@
 import express, { Request, Response, NextFunction } from "express";
 const router = express.Router();
-
 import pool from "./conifg/connectionPool";
 import indexCreateFn from "./lib/fillZero";
 import queryConfig from "./conifg/query/configQuery";
 
 const moment = require("moment");
 require("moment-timezone");
-moment.tz.setDefault("Asiz/Seoul");
+moment.tz.setDefault("Asia/Seoul");
 
-const LOG_DIG: string = "log_dig";
+const INFO_LOCAL: string = "info_local";
 
-router.get("/digs", (req: Request, res: Response, next: NextFunction) => {
-  const _query = queryConfig.findByAll(LOG_DIG);
-
-  
+router.get("/locals", (req: Request, res: Response, next: NextFunction) => {
+  const _query = queryConfig.findByAll(INFO_LOCAL);
   pool.getConnection((err: any, connection: any) => {
     if (err) {
       res.status(404).end();
@@ -23,7 +20,7 @@ router.get("/digs", (req: Request, res: Response, next: NextFunction) => {
       connection.query(_query, (err: any, results: any, field: any) => {
         if (err) {
           res.status(404).end();
-          throw new Error("Connection Query Error!!");
+          throw err;
         } else {
           res.json(results);
         }
@@ -34,15 +31,14 @@ router.get("/digs", (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.get(
-  "/digs/:index",
+  "/locals/:index",
   (req: Request, res: Response, next: NextFunction) => {
     const { index } = req.params;
-    const _query = queryConfig.findByField(LOG_DIG, "dig_seq");
-
+    const _query = queryConfig.findByField(INFO_LOCAL, "local_index");
     pool.getConnection((err: any, connection: any) => {
       if (err) {
         res.status(404).end();
-        throw new Error("Pool getConnection Error!!");
+        throw new Error("Response Error!!");
       } else {
         connection.query(
           _query,
@@ -50,7 +46,7 @@ router.get(
           (err: any, results: any, field: any) => {
             if (err) {
               res.status(404).end();
-              throw new Error("Connection Query Error!!");
+              throw err;
             } else {
               res.json(results);
             }
@@ -62,80 +58,89 @@ router.get(
   }
 );
 
-router.post("/digs", (req: Request, res: Response, next: NextFunction) => {
+router.post("/locals", (req: Request, res: Response, next: NextFunction) => {
   const { body: reqBody } = req;
-  const { dig_length, local_index } = reqBody;
+  const {
+    // local_index,
+    local_name,
+    plan_length,
+    local_process,
+    desciption,
+  } = reqBody;
 
-  const InsertData = {
+  const _localIndex = indexCreateFn("LC");
+
+  const insertData = {
     created_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
-    dig_length,
-    local_index,
+    local_index: _localIndex,
+    local_name,
+    plan_length,
+    local_process,
   };
 
-  const _query = queryConfig.insert(LOG_DIG);
+  const _query = queryConfig.insert(INFO_LOCAL);
 
   pool.getConnection((err: any, connection: any) => {
     if (err) {
-      res.status(404).end();
-      throw new Error("Pool getConnection Error!!");
+      res.status(err.status).end();
+      throw new Error("Response Error!!");
     } else {
-      connection.query(
-        _query,
-        InsertData,
-        (err: any, results: any, field: any) => {
-          if (err) {
-            res.status(404).end();
-            throw new Error("Connection Query Error!!");
-          } else {
-            const resObj: object = {
-              ...reqBody,
-              dig_seq: results.insertId,
-              created_date: InsertData.created_date,
-            };
-            res.json(resObj);
-          }
+      connection.query(_query, insertData, (err: any, results: any) => {
+        if (err) {
+          res.status(404).end();
+          throw err;
+        } else {
+          const resObj: object = {
+            ...reqBody,
+            local_id: results.insertId,
+            created_date: insertData.created_date,
+            local_index: _localIndex,
+          };
+          res.json(resObj);
         }
-      );
+      });
     }
     connection.release();
   });
 });
 
 router.put(
-  "/digs/:index",
+  "/locals/:index",
   (req: Request, res: Response, next: NextFunction) => {
     const { index } = req.params;
     const { body: reqBody } = req;
-    const { dig_length, local_index } = reqBody;
+    const { local_name, plan_length, local_process, desciption } = reqBody;
 
     const data: object = {
       modified_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
-      dig_length,
-      local_index,
+      local_name,
+      plan_length,
+      local_process,
     };
+    const updateData: (object | string)[] = [];
+    updateData[0] = data;
+    updateData[1] = index;
 
-    const UpdataData: (object | string)[] = [];
-    UpdataData[0] = data;
-    UpdataData[1] = index;
-
-    const _query = queryConfig.update(LOG_DIG, "dig_seq");
+    const _query = queryConfig.update(INFO_LOCAL, "local_index");
 
     pool.getConnection((err: any, connection: any) => {
       if (err) {
         res.status(404).end();
-        throw new Error("Pool getConnection Error!!");
+        throw new Error("Response Error!!");
       } else {
         connection.query(
           _query,
-          UpdataData,
+          updateData,
           (err: any, results: any, field: any) => {
             if (err) {
               res.status(404).end();
-              throw new Error("Connection Query Error!!");
+              throw new Error("Response Error!!");
             } else {
-              console.log("results->>", results);
-              console.log("field-->", field);
-              res.json(reqBody);
+              const resObj = {
+                ...reqBody,
+                modified_date: data['modified_date'],
+              };
+              res.json(resObj);
             }
           }
         );
@@ -146,19 +151,20 @@ router.put(
 );
 
 router.delete(
-  "/digs/:id",
+  "/locals/:id",
   (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
-    const _query = queryConfig.delete(LOG_DIG, "dig_seq");
+
+    const _query = queryConfig.delete(INFO_LOCAL, "local_id");
     pool.getConnection((err: any, connection: any) => {
       if (err) {
-        res.status(404).end();
-        throw new Error("Pool getConnection Error!!");
+        res.status(err.status).end();
+        throw new Error("Response Error!!");
       } else {
         connection.query(_query, id, (err: any, results: any, field: any) => {
           if (err) {
             res.status(404).end();
-            throw new Error("Connection Query Error!!");
+            throw err;
           } else {
             const result: object = {
               ...results,

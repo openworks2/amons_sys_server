@@ -53,9 +53,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var router = express_1.default.Router();
 var connectionPool_1 = __importDefault(require("./conifg/connectionPool"));
-var ConnectionUtile_1 = require("./lib/ConnectionUtile");
+var connectionUtile_1 = require("./conifg/connectionUtile");
 var fillZero_1 = __importDefault(require("./lib/fillZero"));
-var configQuery_1 = __importDefault(require("./query/configQuery"));
+var configQuery_1 = __importDefault(require("./conifg/query/configQuery"));
 var moment = require("moment");
 require("moment-timezone");
 moment.tz.setDefault("Asiz/Seoul");
@@ -66,7 +66,7 @@ router.get("/companies", function (req, res, next) { return __awaiter(void 0, vo
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, ConnectionUtile_1.getFindALl({
+                return [4 /*yield*/, connectionUtile_1.getFindALl({
                         table: INFO_COMPANY,
                         req: req,
                         res: res,
@@ -91,7 +91,7 @@ router.get("/companies/:index", function (req, res, next) { return __awaiter(voi
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, ConnectionUtile_1.getFindByField({
+                return [4 /*yield*/, connectionUtile_1.getFindByField({
                         table: INFO_COMPANY,
                         param: param,
                         field: "co_index",

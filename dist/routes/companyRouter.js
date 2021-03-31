@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -52,10 +41,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var router = express_1.default.Router();
-var connectionPool_1 = __importDefault(require("./conifg/connectionPool"));
-var ConnectionUtile_1 = require("./lib/ConnectionUtile");
+var connectionUtile_1 = require("./conifg/connectionUtile");
 var fillZero_1 = __importDefault(require("./lib/fillZero"));
-var configQuery_1 = __importDefault(require("./query/configQuery"));
 var moment = require("moment");
 require("moment-timezone");
 moment.tz.setDefault("Asiz/Seoul");
@@ -66,7 +53,7 @@ router.get("/companies", function (req, res, next) { return __awaiter(void 0, vo
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, ConnectionUtile_1.getFindALl({
+                return [4 /*yield*/, connectionUtile_1.getFindALl({
                         table: INFO_COMPANY,
                         req: req,
                         res: res,
@@ -91,7 +78,7 @@ router.get("/companies/:index", function (req, res, next) { return __awaiter(voi
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, ConnectionUtile_1.getFindByField({
+                return [4 /*yield*/, connectionUtile_1.getFindByField({
                         table: INFO_COMPANY,
                         param: param,
                         field: "co_index",
@@ -127,7 +114,7 @@ router.post("/companies", function (req, res, next) { return __awaiter(void 0, v
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, ConnectionUtile_1.postInsert({
+                return [4 /*yield*/, connectionUtile_1.postInsert({
                         table: INFO_COMPANY,
                         insertData: insertData,
                         key: "co_id",
@@ -164,7 +151,7 @@ router.put("/companies/:index", function (req, res, next) { return __awaiter(voi
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, ConnectionUtile_1.putUpdate({
+                return [4 /*yield*/, connectionUtile_1.putUpdate({
                         table: INFO_COMPANY,
                         field: "co_index",
                         updateData: updateData,
@@ -182,27 +169,31 @@ router.put("/companies/:index", function (req, res, next) { return __awaiter(voi
         }
     });
 }); });
-router.delete("/companies/:id", function (req, res, next) {
-    var id = req.params.id;
-    var _query = configQuery_1.default.delete(INFO_COMPANY, "co_id");
-    connectionPool_1.default.getConnection(function (err, connection) {
-        if (err) {
-            res.status(404).end();
-            throw new Error("Pool getConnection Error!!");
+router.delete("/companies/:id", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var param, error_5;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                param = req.params.id;
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, connectionUtile_1.deleteAction({
+                        table: INFO_COMPANY,
+                        field: "co_id",
+                        param: param,
+                        req: req,
+                        res: res,
+                    })()];
+            case 2:
+                _a.sent();
+                return [3 /*break*/, 4];
+            case 3:
+                error_5 = _a.sent();
+                res.status(404).end();
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
         }
-        else {
-            connection.query(_query, id, function (err, results, field) {
-                if (err) {
-                    res.status(404).end();
-                    throw new Error("Connection Query Error!!");
-                }
-                else {
-                    var result = __assign(__assign({}, results), { id: id });
-                    res.json(result);
-                }
-            });
-        }
-        connection.release();
     });
-});
+}); });
 exports.default = router;

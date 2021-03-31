@@ -17,7 +17,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var router = express_1.default.Router();
 var connectionPool_1 = __importDefault(require("./conifg/connectionPool"));
-var configQuery_1 = __importDefault(require("./query/configQuery"));
+var configQuery_1 = __importDefault(require("./conifg/query/configQuery"));
 var moment = require("moment");
 require("moment-timezone");
 moment.tz.setDefault("Asiz/Seoul");
