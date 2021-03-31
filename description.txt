@@ -1,0 +1,2 @@
+express typescript 프로젝스 초기 셋팅
+https://helloinyong.tistory.com/124
