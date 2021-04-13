@@ -53,7 +53,7 @@ router.get("/companies", function (req, res, next) { return __awaiter(void 0, vo
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, connectionUtile_1.getFindALl({
+                return [4 /*yield*/, connectionUtile_1.getFindAll({
                         table: INFO_COMPANY,
                         req: req,
                         res: res,
@@ -103,19 +103,20 @@ router.get("/companies/:index", function (req, res, next) { return __awaiter(voi
     });
 }); });
 router.post("/companies", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var reqBody, co_name, co_sectors, _companyIndex, insertData, error_3;
+    var reqBody, co_name, co_sectors, description, _companyIndex, insertData, error_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 reqBody = req.body;
                 console.log(req.body);
-                co_name = reqBody.co_name, co_sectors = reqBody.co_sectors;
+                co_name = reqBody.co_name, co_sectors = reqBody.co_sectors, description = reqBody.description;
                 _companyIndex = fillZero_1.default("CO");
                 insertData = {
                     created_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
                     co_index: _companyIndex,
                     co_name: co_name,
                     co_sectors: co_sectors,
+                    description: description
                 };
                 _a.label = 1;
             case 1:
@@ -142,17 +143,18 @@ router.post("/companies", function (req, res, next) { return __awaiter(void 0, v
     });
 }); });
 router.put("/companies/:index", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var index, reqBody, co_name, co_sectors, data, updateData, error_4;
+    var index, reqBody, co_name, co_sectors, description, data, updateData, error_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 index = req.params.index;
                 reqBody = req.body;
-                co_name = reqBody.co_name, co_sectors = reqBody.co_sectors;
+                co_name = reqBody.co_name, co_sectors = reqBody.co_sectors, description = reqBody.description;
                 data = {
                     modified_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
                     co_name: co_name,
                     co_sectors: co_sectors,
+                    description: description
                 };
                 updateData = [];
                 updateData[0] = data;

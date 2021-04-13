@@ -53,7 +53,7 @@ router.get("/workers", function (req, res, next) { return __awaiter(void 0, void
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, connectionUtile_1.getFindALl({
+                return [4 /*yield*/, connectionUtile_1.getFindAll({
                         table: INFO_WORKER,
                         req: req,
                         res: res,

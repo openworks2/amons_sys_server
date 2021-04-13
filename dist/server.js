@@ -25,6 +25,7 @@ var vehicleRouter_1 = __importDefault(require("./routes/vehicleRouter"));
 var workerRouter_1 = __importDefault(require("./routes/workerRouter"));
 var cctvRouter_1 = __importDefault(require("./routes/cctvRouter"));
 var scannerRouter_1 = __importDefault(require("./routes/scannerRouter"));
+var weatherRouter_1 = __importDefault(require("./routes/weatherRouter"));
 var digRouter_1 = __importDefault(require("./routes/digRouter"));
 var processRouter_1 = __importDefault(require("./routes/processRouter"));
 app.use("/api", index_1.default);
@@ -37,6 +38,7 @@ app.use("/api/vehicle", vehicleRouter_1.default);
 app.use("/api/worker", workerRouter_1.default);
 app.use("/api/cctv", cctvRouter_1.default);
 app.use("/api/scanner", scannerRouter_1.default);
+app.use("/api/weather", weatherRouter_1.default);
 app.use("/api/dig", digRouter_1.default);
 app.use("/api/process", processRouter_1.default);
 app.listen(port, function () {

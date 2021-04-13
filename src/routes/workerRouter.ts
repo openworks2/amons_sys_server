@@ -3,7 +3,7 @@ const router = express.Router();
 import indexCreateFn from "./lib/fillZero";
 import {
   deleteAction,
-  getFindALl,
+  getFindAll,
   getFindByField,
   postInsert,
   putUpdate,
@@ -19,7 +19,7 @@ router.get(
   "/workers",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await getFindALl({
+      await getFindAll({
         table: INFO_WORKER,
         req,
         res,

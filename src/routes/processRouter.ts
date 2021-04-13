@@ -2,7 +2,7 @@ import express, { Request, Response, NextFunction } from "express";
 const router = express.Router();
 import {
   deleteAction,
-  getFindALl,
+  getFindAll,
   getFindByField,
   postInsert,
   putUpdate,
@@ -18,7 +18,7 @@ router.get(
   "/processes",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await getFindALl({
+      await getFindAll({
         table: LOG_PROCESS,
         req,
         res,

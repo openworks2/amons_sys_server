@@ -72,7 +72,7 @@ router.get("/accounts", function (req, res, next) { return __awaiter(void 0, voi
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, connectionUtile_1.getFindALl({
+                return [4 /*yield*/, connectionUtile_1.getFindAll({
                         table: TB_ACCOUNT,
                         req: req,
                         res: res,

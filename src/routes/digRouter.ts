@@ -2,7 +2,7 @@ import express, { Request, Response, NextFunction } from "express";
 const router = express.Router();
 import {
   deleteAction,
-  getFindALl,
+  getFindAll,
   getFindByField,
   postInsert,
   putUpdate,
@@ -16,7 +16,7 @@ const LOG_DIG: string = "log_dig";
 
 router.get("/digs", async (req: Request, res: Response, next: NextFunction) => {
   try {
-    await getFindALl({
+    await getFindAll({
       table: LOG_DIG,
       req,
       res,

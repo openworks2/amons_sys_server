@@ -6,7 +6,7 @@ import indexCreateFn from "./lib/fillZero";
 import queryConfig from "./conifg/query/configQuery";
 import {
   deleteAction,
-  getFindALl,
+  getFindAll,
   getFindByField,
   postInsert,
   putUpdate,
@@ -22,7 +22,7 @@ router.get(
   "/cctvs",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await getFindALl({
+      await getFindAll({
         table: INFO_CCTV,
         req,
         res,

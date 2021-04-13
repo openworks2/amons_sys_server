@@ -3,7 +3,7 @@ const router = express.Router();
 
 import {
   deleteAction,
-  getFindALl,
+  getFindAll,
   getFindByField,
   postInsert,
   putUpdate,
@@ -19,7 +19,7 @@ router.get(
   "/announces",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await getFindALl({
+      await getFindAll({
         table: INFO_ANNOUNCE,
         req,
         res,

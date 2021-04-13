@@ -3,7 +3,7 @@ const router = express.Router();
 
 import {
   deleteAction,
-  getFindALl,
+  getFindAll,
   getFindByField,
   postInsert,
   putUpdate,
@@ -20,7 +20,7 @@ router.get(
   "/companies",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await getFindALl({
+      await getFindAll({
         table: INFO_COMPANY,
         req,
         res,
@@ -61,7 +61,7 @@ router.post(
   async (req: Request, res: Response, next: NextFunction) => {
     const { body: reqBody } = req;
     console.log(req.body);
-    const { co_name, co_sectors } = reqBody;
+    const { co_name, co_sectors, description } = reqBody;
     const _companyIndex = indexCreateFn("CO");
 
     const insertData = {
@@ -69,6 +69,7 @@ router.post(
       co_index: _companyIndex,
       co_name,
       co_sectors,
+      description
     };
 
     try {
@@ -93,12 +94,13 @@ router.put(
   async (req: Request, res: Response, next: NextFunction) => {
     const { index } = req.params;
     const { body: reqBody } = req;
-    const { co_name, co_sectors } = reqBody;
+    const { co_name, co_sectors, description } = reqBody;
 
     const data: object = {
       modified_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
       co_name,
       co_sectors,
+      description
     };
 
     const updateData: (object | string)[] = [];

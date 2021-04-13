@@ -25,6 +25,7 @@ import vehicleRouter from './routes/vehicleRouter';
 import workerRouter from './routes/workerRouter';
 import cctvRouter from './routes/cctvRouter';
 import scannerRouter from './routes/scannerRouter';
+import weatherRouter from './routes/weatherRouter';
 
 import digRouter from './routes/digRouter';
 import processRouter from './routes/processRouter';
@@ -39,6 +40,7 @@ app.use("/api/vehicle", vehicleRouter);
 app.use("/api/worker", workerRouter);
 app.use("/api/cctv", cctvRouter);
 app.use("/api/scanner", scannerRouter);
+app.use("/api/weather", weatherRouter);
 
 app.use("/api/dig", digRouter);
 app.use("/api/process", processRouter);

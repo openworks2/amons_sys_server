@@ -17,7 +17,7 @@ import queryConfig from "./conifg/query/configQuery";
 import dbconfig from "./conifg/database";
 import {
   deleteAction,
-  getFindALl,
+  getFindAll,
   getFindByField,
 } from "./conifg/connectionUtile";
 const sessionStore = new MySQLStore(dbconfig);
@@ -61,7 +61,7 @@ router.get(
     const _query = queryConfig.findByAll(TB_ACCOUNT);
 
     try {
-      await getFindALl({
+      await getFindAll({
         table: TB_ACCOUNT,
         req,
         res,

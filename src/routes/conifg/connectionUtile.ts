@@ -2,7 +2,7 @@ import pool from "./connectionPool";
 import queryConfig from "./query/configQuery";
 import { FindAll, FindField, Post, Put, Delete } from "./connectionInterface";
 
-export const getFindALl = ({ table, req, res }: FindAll): Function => {
+export const getFindAll = ({ table, req, res }: FindAll): Function => {
   const _query: string = queryConfig.findByAll(table);
   return () =>
     pool.getConnection((err: any, connection: any) => {

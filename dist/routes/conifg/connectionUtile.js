@@ -14,10 +14,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteAction = exports.putUpdate = exports.postInsert = exports.getFindByField = exports.getFindALl = void 0;
+exports.deleteAction = exports.putUpdate = exports.postInsert = exports.getFindByField = exports.getFindAll = void 0;
 var connectionPool_1 = __importDefault(require("./connectionPool"));
 var configQuery_1 = __importDefault(require("./query/configQuery"));
-var getFindALl = function (_a) {
+var getFindAll = function (_a) {
     var table = _a.table, req = _a.req, res = _a.res;
     var _query = configQuery_1.default.findByAll(table);
     return function () {
@@ -45,7 +45,7 @@ var getFindALl = function (_a) {
         });
     };
 };
-exports.getFindALl = getFindALl;
+exports.getFindAll = getFindAll;
 var getFindByField = function (_a) {
     var table = _a.table, param = _a.param, field = _a.field, req = _a.req, res = _a.res;
     var _query = configQuery_1.default.findByField(table, field);
