@@ -17,13 +17,15 @@ require("moment-timezone");
 moment.tz.setDefault("Asiz/Seoul");
 
 const INFO_BEACON = "info_beacon";
+const INFO_BEACON_VIEW = "info_beacon_view";
 
 router.get(
   "/beacons",
   async (req, res, next) => {
     try {
       await connectionUtile.getFindAll({
-        table: INFO_BEACON,
+        table: INFO_BEACON_VIEW,
+        // table: INFO_BEACON,
         req,
         res,
       })();
@@ -40,7 +42,8 @@ router.get(
     const { index: param } = req.params;
     try {
       await connectionUtile.getFindByField({
-        table: INFO_BEACON,
+        table: INFO_BEACON_VIEW,
+        // table: INFO_BEACON,
         param,
         field: "bc_index",
         req,
@@ -60,7 +63,7 @@ router.post(
   "/beacons",
   async (req, res, next) => {
     const { body: reqBody } = req;
-    const { bc_address } = reqBody;
+    const { bc_address, description } = reqBody;
 
     const _beaconIndex = indexCreateFn("BC");
 
@@ -68,6 +71,7 @@ router.post(
       created_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
       bc_index: _beaconIndex,
       bc_address,
+      description: description || null
     };
 
     try {
@@ -92,11 +96,12 @@ router.put(
   async (req, res, next) => {
     const { index } = req.params;
     const { body: reqBody } = req;
-    const { bc_address } = reqBody;
+    const { bc_address, description } = reqBody;
 
     const data = {
       modified_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
       bc_address,
+      description: description || null
     };
 
     const updateData = [];

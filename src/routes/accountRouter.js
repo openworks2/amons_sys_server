@@ -213,7 +213,7 @@ router.post("/login", (req, res, next) => {
           const isResults = results.length;
           if (isResults === 0) {
             // 아이디가 존재 하지 않는다.
-            const resDataData = {
+            const resData = {
               status: "FAIL",
               message: "사용자 아이디 확인를 확인해주세요.",
               validated: false, // 계정 체크
@@ -249,7 +249,7 @@ router.post("/login", (req, res, next) => {
                 acc_role: result.acc_role,
               };
 
-              const resDataData = {
+              const resData = {
                 status: "SUCCESS",
                 message: "로그인 성공",
                 validated: true, // 계정 체크
@@ -265,7 +265,7 @@ router.post("/login", (req, res, next) => {
                 res.json(resData);
               });
             } else {
-              const resDataData = {
+              const resData = {
                 status: "FAIL",
                 message: "비밀번호를 확인해주세요.",
                 validated: false, // 계정 체크
