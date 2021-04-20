@@ -10,17 +10,17 @@ const CryptoJS = require("crypto-js");
 const session = require("express-session");
 const MySQLStore = require("express-mysql-session");
 
-const pool = require("./conifg/connectionPool");
+const pool = require("./config/connectionPool");
 // const indexCreateFn = require( "./lib/fillZero";
-const queryConfig = require("./conifg/query/configQuery");
+const queryConfig = require("./config/query/configQuery");
 
-const dbconfig = require("./conifg/database");
+const dbconfig = require("./config/database");
 // const {
 //   deleteAction,
 //   getFindAll,
 //   getFindByField,
-// } = require( "./conifg/connectionUtile");
-const connectionUtile = require("./conifg/connectionUtile");
+// } = require( "./config/connectionUtile");
+const connectionUtile = require("./config/connectionUtile");
 const sessionStore = new MySQLStore(dbconfig);
 router.use(
   session({

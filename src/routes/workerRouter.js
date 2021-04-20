@@ -7,9 +7,9 @@ const indexCreateFn = require("./lib/fillZero");
 //   getFindByField,
 //   postInsert,
 //   putUpdate,
-// } = require("./conifg/connectionUtile");
+// } = require("./config/connectionUtile");
 
-const connectionUtile = require("./conifg/connectionUtile");
+const connectionUtile = require("./config/connectionUtile");
 
 const moment = require("moment");
 require("moment-timezone");

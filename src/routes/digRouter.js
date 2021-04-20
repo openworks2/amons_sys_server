@@ -6,9 +6,9 @@ const router = express.Router();
 //   getFindByField,
 //   postInsert,
 //   putUpdate,
-// } = require("./conifg/connectionUtile");
+// } = require("./config/connectionUtile");
 
-const connectionUtile = require("./conifg/connectionUtile");
+const connectionUtile = require("./config/connectionUtile");
 
 
 const moment = require("moment");

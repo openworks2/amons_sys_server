@@ -1,5 +1,5 @@
 const express = require('express');
-const { putUpdate } = require('./conifg/connectionUtile');
+const { putUpdate } = require('./config/connectionUtile');
 const router = express.Router();
 
 const weather = require('./lib/weatherAPI');

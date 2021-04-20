@@ -5,7 +5,7 @@ moment.tz.setDefault("Asiz/Seoul");
 const request = require('request');
 const schedule = require('node-schedule');
 
-const pool = require("../conifg/connectionPool");
+const pool = require("../config/connectionPool");
 
 
 const weather = {
