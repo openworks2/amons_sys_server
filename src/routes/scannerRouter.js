@@ -110,6 +110,8 @@ router.put(
     const { index } = req.params;
     const { body: reqBody } = req;
     const {
+      scn_id,
+      scn_index,
       scn_pos_x,
       scn_kind,
       scn_group,
@@ -122,6 +124,8 @@ router.put(
 
     const data = {
       modified_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
+      scn_id,
+      scn_index,
       scn_pos_x,
       scn_kind,
       scn_group,

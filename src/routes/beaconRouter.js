@@ -98,7 +98,7 @@ router.post(
   "/beacons",
   async (req, res, next) => {
     const { body: reqBody } = req;
-    const { bc_address, description } = reqBody;
+    const { bc_id, bc_index, bc_address, description } = reqBody;
 
     const _beaconIndex = indexCreateFn("BC");
 
@@ -131,10 +131,12 @@ router.put(
   async (req, res, next) => {
     const { index } = req.params;
     const { body: reqBody } = req;
-    const { bc_address, description } = reqBody;
+    const { bc_id, bc_index, bc_address, description } = reqBody;
 
     const data = {
       modified_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
+      bc_id,
+      bc_index,
       bc_address,
       description: description || null
     };

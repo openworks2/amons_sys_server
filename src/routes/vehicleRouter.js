@@ -98,10 +98,12 @@ router.put(
   async (req, res, next) => {
     const { index } = req.params;
     const { body: reqBody } = req;
-    const { vh_name, vh_number, vh_image_path, co_index, bc_index } = reqBody;
+    const { vh_id, vh_index, vh_name, vh_number, vh_image_path, co_index, bc_index } = reqBody;
 
     const data = {
       modified_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
+      vh_id,
+      vh_index,
       vh_name,
       vh_number,
       vh_image_path,

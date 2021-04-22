@@ -108,6 +108,8 @@ router.put(
     const { index } = req.params;
     const { body: reqBody } = req;
     const {
+      wk_id,
+      wk_index,
       wk_name,
       wk_phone,
       wk_tel,
@@ -123,6 +125,8 @@ router.put(
 
     const data = {
       modified_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
+      wk_id,
+      wk_index,
       wk_name,
       wk_phone,
       wk_tel,
