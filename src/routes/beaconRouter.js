@@ -98,7 +98,7 @@ router.post(
   "/beacons",
   async (req, res, next) => {
     const { body: reqBody } = req;
-    const { bc_id, bc_index, bc_address, description } = reqBody;
+    const { bc_address, description } = reqBody;
 
     const _beaconIndex = indexCreateFn("BC");
 
