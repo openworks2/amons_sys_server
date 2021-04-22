@@ -54,7 +54,7 @@ const weather = {
         const ny = _this.options.ny;
 
         const url = `${_this.address}?serviceKey=${apiKey}&numOfRows=${numOfRows}&pageNo=${pageNo}&dataType=${dataType}&base_date=${currentDate}&base_time=1100&nx=${nx}&ny=${ny}`;
-        console.log(url)
+        // console.log(url)
         request(url, (error, response, body) => {
             console.error('error:', error); // Print the error if one occurred
             const statusCode = response && response.statusCode;

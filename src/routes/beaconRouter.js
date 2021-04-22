@@ -13,6 +13,8 @@ const connectionUtile = require("./config/connectionUtile");
 
 
 const moment = require("moment");
+const queryConfig = require("./config/query/configQuery");
+const pool = require("./config/connectionPool");
 require("moment-timezone");
 moment.tz.setDefault("Asiz/Seoul");
 
@@ -58,6 +60,39 @@ router.get(
     }
   }
 );
+
+// 할당 되지 않은 비콘 조회
+router.get(
+  "/unused",
+  (req, res, next) => {
+    const _query = `SELECT 
+                      bc_id, bc_index, bc_address
+                    FROM info_beacon_view
+                    WHERE wk_id IS NULL AND vh_id IS NULL;`;
+    pool.getConnection((err, connection) => {
+      if (err) {
+        res
+          .status(404)
+          .json({ status: 404, message: "Pool getConnection Error" });
+      } else {
+        connection.query(_query, (err, results, field) => {
+          if (err) {
+            console.error(err);
+            res
+              .status(404)
+              .json({ status: 404, message: "Connection Query Error" });
+          } else {
+
+            res.json(results);
+          }
+        }
+        );
+      }
+      connection.release();
+
+    });
+  });
+
 
 router.post(
   "/beacons",

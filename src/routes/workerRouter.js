@@ -16,13 +16,14 @@ require("moment-timezone");
 moment.tz.setDefault("Asiz/Seoul");
 
 const INFO_WORKER = "info_worker";
+const INFO_WORKER_VIEW = "info_worker_view";
 
 router.get(
   "/workers",
   async (req, res, next) => {
     try {
       await connectionUtile.getFindAll({
-        table: INFO_WORKER,
+        table: INFO_WORKER_VIEW,
         req,
         res,
       })();
@@ -39,7 +40,7 @@ router.get(
     const { index: param } = req.params;
     try {
       await connectionUtile.getFindByField({
-        table: INFO_WORKER,
+        table: INFO_WORKER_VIEW,
         param,
         field: "wk_index",
         req,
@@ -64,6 +65,7 @@ router.post(
       wk_nation,
       wk_blood_type,
       wk_blood_group,
+      wk_sms_yn,
       wk_image_path,
       co_index,
       bc_index,
@@ -81,6 +83,7 @@ router.post(
       wk_nation,
       wk_blood_type,
       wk_blood_group,
+      wk_sms_yn,
       wk_image_path,
       co_index,
       bc_index,
@@ -112,6 +115,7 @@ router.put(
       wk_nation,
       wk_blood_type,
       wk_blood_group,
+      wk_sms_yn,
       wk_image_path,
       co_index,
       bc_index,
@@ -126,6 +130,7 @@ router.put(
       wk_nation,
       wk_blood_type,
       wk_blood_group,
+      wk_sms_yn,
       wk_image_path,
       co_index,
       bc_index,
