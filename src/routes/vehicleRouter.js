@@ -107,7 +107,7 @@ router.put(
       vh_index,
       vh_name,
       vh_number,
-      vh_image_path,
+      vh_image,
       description,
       co_index,
       bc_index,
@@ -119,7 +119,7 @@ router.put(
       vh_index,
       vh_name,
       vh_number,
-      vh_image_path,
+      vh_image,
       co_index,
       bc_index,
       description

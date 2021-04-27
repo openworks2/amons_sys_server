@@ -17,13 +17,14 @@ require("moment-timezone");
 moment.tz.setDefault("Asiz/Seoul");
 
 const INFO_CCTV = "info_cctv";
+const INFO_CCTV_VIEW = "info_cctv_view";
 
 router.get(
   "/cctvs",
   async (req, res, next) => {
     try {
       await connectionUtile.getFindAll({
-        table: INFO_CCTV,
+        table: INFO_CCTV_VIEW,
         req,
         res,
       })();
@@ -43,7 +44,7 @@ router.get(
     const { index: param } = req.params;
     try {
       await connectionUtile.getFindByField({
-        table: INFO_CCTV,
+        table: INFO_CCTV_VIEW,
         param,
         field: "cctv_index",
         req,
@@ -92,6 +93,7 @@ router.post(
         table: INFO_CCTV,
         insertData,
         key: "cctv_id",
+        body: reqBody,
         req,
         res,
       })();
@@ -139,6 +141,7 @@ router.put(
         table: INFO_CCTV,
         field: "cctv_index",
         updateData,
+        body: reqBody,
         req,
         res,
       })();

@@ -16,13 +16,14 @@ require("moment-timezone");
 moment.tz.setDefault("Asiz/Seoul");
 
 const INFO_SCANNER = "info_scanner";
+const INFO_SCANNER_VIEW = "info_scanner_view";
 
 router.get(
   "/scanners",
   async (req, res, next) => {
     try {
       await connectionUtile.getFindAll({
-        table: INFO_SCANNER,
+        table: INFO_SCANNER_VIEW,
         req,
         res,
       })();
@@ -41,7 +42,7 @@ router.get(
     const { index: param } = req.params;
     try {
       await connectionUtile.getFindByField({
-        table: INFO_SCANNER,
+        table: INFO_SCANNER_VIEW,
         param,
         field: "scn_index",
         req,
@@ -92,6 +93,7 @@ router.post(
         table: INFO_SCANNER,
         insertData,
         key: "scn_id",
+        body: reqBody,
         req,
         res,
       })();
@@ -145,6 +147,7 @@ router.put(
         table: INFO_SCANNER,
         field: "scn_index",
         updateData,
+        body: reqBody,
         req,
         res,
       })();

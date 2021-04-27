@@ -68,7 +68,7 @@ router.post(
       wk_blood_type,
       wk_blood_group,
       wk_sms_yn,
-      wk_image_path,
+      wk_image,
       co_index,
       bc_index,
     } = reqBody;
@@ -87,7 +87,7 @@ router.post(
       wk_blood_type,
       wk_blood_group,
       wk_sms_yn,
-      wk_image_path,
+      wk_image,
       co_index,
       bc_index,
     };
