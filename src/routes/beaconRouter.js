@@ -132,7 +132,6 @@ router.put(
     const { index } = req.params;
     const { body: reqBody } = req;
     const { bc_id, bc_index, bc_address, description } = reqBody;
-
     const data = {
       modified_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
       bc_id,
@@ -150,6 +149,7 @@ router.put(
         table: INFO_BEACON,
         field: "bc_index",
         updateData,
+        body: reqBody,
         req,
         res,
       })();

@@ -29,7 +29,7 @@ router.get(
       })();
     } catch (error) {
       console.error(error);
-      res.status(404).json({status:404, message:"CallBack Async Function Error"});
+      res.status(404).json({ status: 404, message: "CallBack Async Function Error" });
     }
   }
 );
@@ -48,7 +48,8 @@ router.get(
       })();
     } catch (error) {
       console.error(error);
-      res.status(404).json({status:404, message:"CallBack Async Function Error"});    }
+      res.status(404).json({ status: 404, message: "CallBack Async Function Error" });
+    }
   }
 );
 
@@ -61,6 +62,7 @@ router.post(
       wk_name,
       wk_phone,
       wk_tel,
+      wk_birth,
       wk_position,
       wk_nation,
       wk_blood_type,
@@ -79,6 +81,7 @@ router.post(
       wk_name,
       wk_phone,
       wk_tel,
+      wk_birth,
       wk_position,
       wk_nation,
       wk_blood_type,
@@ -98,7 +101,8 @@ router.post(
       })();
     } catch (error) {
       console.error(error);
-      res.status(404).json({status:404, message:"CallBack Async Function Error"});    }
+      res.status(404).json({ status: 404, message: "CallBack Async Function Error" });
+    }
   }
 );
 
@@ -113,6 +117,7 @@ router.put(
       wk_name,
       wk_phone,
       wk_tel,
+      wk_birth,
       wk_position,
       wk_nation,
       wk_blood_type,
@@ -121,6 +126,7 @@ router.put(
       wk_image_path,
       co_index,
       bc_index,
+      bc_address
     } = reqBody;
 
     const data = {
@@ -130,6 +136,7 @@ router.put(
       wk_name,
       wk_phone,
       wk_tel,
+      wk_birth,
       wk_position,
       wk_nation,
       wk_blood_type,
@@ -149,12 +156,17 @@ router.put(
         table: INFO_WORKER,
         field: "wk_index",
         updateData,
+        body: {
+          ...reqBody,
+          bc_address: bc_index !== null ? bc_address : null
+        },
         req,
         res,
       })();
     } catch (error) {
       console.error(error);
-      res.status(404).json({status:404, message:"CallBack Async Function Error"});    }
+      res.status(404).json({ status: 404, message: "CallBack Async Function Error" });
+    }
   }
 );
 
@@ -172,7 +184,8 @@ router.delete(
       })();
     } catch (error) {
       console.error(error);
-      res.status(404).json({status:404, message:"CallBack Async Function Error"});    }
+      res.status(404).json({ status: 404, message: "CallBack Async Function Error" });
+    }
   }
 );
 

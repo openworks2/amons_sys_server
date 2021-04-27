@@ -16,13 +16,14 @@ require("moment-timezone");
 moment.tz.setDefault("Asiz/Seoul");
 
 const INFO_VEHICLE = "info_vehicle";
+const INFO_VEHICLE_VIEW = "info_vehicle_view";
 
 router.get(
   "/vehicles",
   async (req, res, next) => {
     try {
-      await getFindAll({
-        table: INFO_VEHICLE,
+      await connectionUtile.getFindAll({
+        table: INFO_VEHICLE_VIEW,
         req,
         res,
       })();
@@ -42,7 +43,7 @@ router.get(
 
     try {
       await connectionUtile.getFindByField({
-        table: INFO_VEHICLE,
+        table: INFO_VEHICLE_VIEW,
         param,
         field: "vh_index",
         req,
@@ -62,7 +63,8 @@ router.post(
   async (req, res, next) => {
     const { body: reqBody } = req;
     console.log(req.body);
-    const { vh_name, vh_number, vh_image_path, co_index, bc_index } = reqBody;
+    const { vh_name, vh_number, vh_image_path, co_index, bc_index, description } = reqBody;
+
 
     const _vehicleIndex = indexCreateFn("VH");
 
@@ -74,6 +76,7 @@ router.post(
       vh_image_path,
       co_index,
       bc_index,
+      description
     };
 
     try {
@@ -81,6 +84,7 @@ router.post(
         table: INFO_VEHICLE,
         insertData,
         key: "vh_id",
+        body: reqBody,
         req,
         res,
       })();
@@ -98,8 +102,17 @@ router.put(
   async (req, res, next) => {
     const { index } = req.params;
     const { body: reqBody } = req;
-    const { vh_id, vh_index, vh_name, vh_number, vh_image_path, co_index, bc_index } = reqBody;
-
+    const {
+      vh_id,
+      vh_index,
+      vh_name,
+      vh_number,
+      vh_image_path,
+      description,
+      co_index,
+      bc_index,
+      bc_address
+    } = reqBody;
     const data = {
       modified_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
       vh_id,
@@ -109,6 +122,7 @@ router.put(
       vh_image_path,
       co_index,
       bc_index,
+      description
     };
 
     const updateData = [];
@@ -120,6 +134,10 @@ router.put(
         table: INFO_VEHICLE,
         field: "vh_index",
         updateData,
+        body: {
+          ...reqBody,
+          bc_address: bc_index !== null ? bc_address : null
+        },
         req,
         res,
       })();

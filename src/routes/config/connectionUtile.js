@@ -66,6 +66,7 @@ const connectionUtile = {
     table,
     insertData,
     key,
+    body = {},
     req,
     res,
   }) {
@@ -89,7 +90,8 @@ const connectionUtile = {
                   .json({ status: 404, message: "Connection Query Error" });
               } else {
                 const resObj = {
-                  ...insertData,
+                  // ...insertData,
+                  ...body,
                   [key]: results.insertId,
                 };
                 res.json(resObj);
@@ -104,6 +106,7 @@ const connectionUtile = {
     table,
     field,
     updateData,
+    body = {},
     req,
     res,
   }) {
@@ -127,6 +130,7 @@ const connectionUtile = {
                   .json({ status: 404, message: "Connection Query Error" });
               } else {
                 const resObj = {
+                  ...body,
                   ...updateData[0],
                 };
                 res.json(resObj);
