@@ -1,8 +1,10 @@
 # dist
 /dist
+/uploads
 
 # dependencies
 /node_modules
 
 # file
 database.js
+

@@ -47,6 +47,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use(express.static(path.join(__dirname, "public")));
+app.use('/upload', express.static('uploads'));
+
 app.use(cookieParser());
 app.use(logger('dev'));
 const corsOptions = {
