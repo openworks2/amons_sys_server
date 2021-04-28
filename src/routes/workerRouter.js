@@ -57,7 +57,7 @@ router.post(
   "/workers",
   async (req, res, next) => {
     const { body: reqBody } = req;
-    console.log(req.body);
+    console.log('-->', req.body);
     const {
       wk_name,
       wk_phone,
@@ -71,6 +71,7 @@ router.post(
       wk_image,
       co_index,
       bc_index,
+      bc_address
     } = reqBody;
 
     const _workerIndex = indexCreateFn("WK");
@@ -89,13 +90,17 @@ router.post(
       wk_sms_yn,
       wk_image,
       co_index,
-      bc_index,
+      bc_index
     };
     try {
       await connectionUtile.postInsert({
         table: INFO_WORKER,
         insertData,
         key: "wk_id",
+        body: {
+          ...reqBody,
+          bc_address: bc_index !== null ? bc_address : null
+        },
         req,
         res,
       })();
@@ -123,7 +128,7 @@ router.put(
       wk_blood_type,
       wk_blood_group,
       wk_sms_yn,
-      wk_image_path,
+      wk_image,
       co_index,
       bc_index,
       bc_address
@@ -142,7 +147,7 @@ router.put(
       wk_blood_type,
       wk_blood_group,
       wk_sms_yn,
-      wk_image_path,
+      wk_image,
       co_index,
       bc_index,
     };

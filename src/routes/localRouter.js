@@ -60,7 +60,7 @@ router.post(
   "/locals",
   async (req, res, nextn) => {
     const { body: reqBody } = req;
-    const { local_name, plan_length, local_process } = reqBody;
+    const { local_name, plan_length, local_process, description } = reqBody;
 
     const _localIndex = indexCreateFn("LC");
 
@@ -70,6 +70,7 @@ router.post(
       local_name,
       plan_length,
       local_process,
+      description
     };
 
     try {
@@ -77,6 +78,10 @@ router.post(
         table: INFO_LOCAL,
         insertData,
         key: "local_id",
+        body: {
+          ...reqBody,
+          created_date: insertData.created_date
+        },
         req,
         res,
       })();
@@ -94,8 +99,8 @@ router.put(
   async (req, res, nextn) => {
     const { index } = req.params;
     const { body: reqBody } = req;
-    const { local_id, local_index, local_name, plan_length, local_process } = reqBody;
-
+    const { local_id, local_index, local_name, plan_length, local_process, description } = reqBody;
+    console.log(reqBody)
     const data = {
       modified_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
       local_id,
@@ -103,6 +108,7 @@ router.put(
       local_name,
       plan_length,
       local_process,
+      description
     };
     const updateData = [];
     updateData[0] = data;
@@ -113,6 +119,7 @@ router.put(
         table: INFO_LOCAL,
         field: "local_index",
         updateData,
+        body: reqBody,
         req,
         res,
       })();

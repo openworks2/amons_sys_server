@@ -90,10 +90,12 @@ const connectionUtile = {
                   .json({ status: 404, message: "Connection Query Error" });
               } else {
                 const resObj = {
-                  // ...insertData,
+                  ...insertData,
                   ...body,
                   [key]: results.insertId,
                 };
+                console.log('resObj=>',resObj)
+
                 res.json(resObj);
               }
             }
@@ -133,6 +135,7 @@ const connectionUtile = {
                   ...body,
                   ...updateData[0],
                 };
+                console.log('put resObj=>',resObj)
                 res.json(resObj);
               }
             }

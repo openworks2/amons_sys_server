@@ -5,7 +5,7 @@ const router = express.Router();
 const weather = require('./lib/weatherAPI');
 
 const options = {}
-weather.init(options);
+// weather.init(options);
 
 router.get("/weathers", (req, res, next) => {
 

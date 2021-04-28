@@ -63,7 +63,7 @@ router.post(
   async (req, res, next) => {
     const { body: reqBody } = req;
     console.log(req.body);
-    const { vh_name, vh_number, vh_image_path, co_index, bc_index, description } = reqBody;
+    const { vh_name, vh_number, vh_image, co_index, bc_index, description, bc_address } = reqBody;
 
 
     const _vehicleIndex = indexCreateFn("VH");
@@ -73,7 +73,7 @@ router.post(
       vh_index: _vehicleIndex,
       vh_name,
       vh_number,
-      vh_image_path,
+      vh_image,
       co_index,
       bc_index,
       description
@@ -84,7 +84,10 @@ router.post(
         table: INFO_VEHICLE,
         insertData,
         key: "vh_id",
-        body: reqBody,
+        body: {
+          ...reqBody,
+          bc_address: bc_index !== null ? bc_address : null
+        },
         req,
         res,
       })();
