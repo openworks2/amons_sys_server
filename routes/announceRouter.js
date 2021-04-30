@@ -72,6 +72,7 @@ router.post(
         table: INFO_ANNOUNCE,
         insertData,
         key: "ann_id",
+        body: reqBody,
         req,
         res,
       })();
@@ -102,10 +103,11 @@ router.put(
     updateData[1] = index;
 
     try {
-      await putUpdate({
+      await connectionUtile.putUpdate({
         table: INFO_ANNOUNCE,
         field: "ann_id",
         updateData,
+        body: reqBody,
         req,
         res,
       })();

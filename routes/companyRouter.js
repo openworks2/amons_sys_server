@@ -79,6 +79,7 @@ router.post(
         table: INFO_COMPANY,
         insertData,
         key: "co_id",
+        body:reqBody,
         req,
         res,
       })();
@@ -116,6 +117,7 @@ router.put(
         table: INFO_COMPANY,
         field: "co_index",
         updateData,
+        body:reqBody,
         req,
         res,
       })();
