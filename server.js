@@ -9,6 +9,22 @@ const logger = require('morgan');
 
 const port = process.env.PORT || 3000;
 
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+app.use(express.static(path.join(__dirname, "public")));
+app.use('/upload', express.static('uploads'));
+
+app.use(cookieParser());
+app.use(logger('dev'));
+const corsOptions = {
+  origin: true,
+  credentials: true
+};
+app.use(cors(corsOptions));
+
+
 const router = require("./routes/index");
 const accountRouter = require("./routes/accountRouter");
 const localRouter = require("./routes/localRouter");
@@ -23,6 +39,8 @@ const weatherRouter = require("./routes/weatherRouter");
 
 const digRouter = require("./routes/digRouter");
 const processRouter = require("./routes/processRouter");
+
+const monitorRouter = require("./routes/monitorRouter");
 
 app.use("/api", router);
 app.use("/api/account", accountRouter);
@@ -39,23 +57,13 @@ app.use("/api/weather", weatherRouter);
 app.use("/api/dig", digRouter);
 app.use("/api/process", processRouter);
 
+app.use("/api/monitor", monitorRouter);
+
 // app.use(bodyParser.json());
 // app.use(bodyParser.json({ limit : "100mb" })); 
 // app.use(bodyParser.urlencoded({ limit:"100mb", extended: false }));
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
 
-app.use(express.static(path.join(__dirname, "public")));
-app.use('/upload', express.static('uploads'));
-
-app.use(cookieParser());
-app.use(logger('dev'));
-const corsOptions = {
-  origin: true,
-  credentials: true
-};
-app.use(cors(corsOptions));
 
 app.listen(port, () => {
   console.log(`express in running on ${port}`);

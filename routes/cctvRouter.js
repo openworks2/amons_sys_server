@@ -71,7 +71,9 @@ router.post(
       cctv_pw,
       cctv_ip,
       cctv_port,
-      local_index,
+      cctv_number, // 탭순서
+      description,
+      local_index
     } = reqBody;
 
     const _cctvIndex = indexCreateFn("CCTV");
@@ -85,7 +87,9 @@ router.post(
       cctv_pw,
       cctv_ip,
       cctv_port,
-      local_index,
+      cctv_number, // 탭순서
+      description,
+      local_index
     };
 
     try {
@@ -119,6 +123,8 @@ router.put(
       cctv_ip,
       cctv_port,
       local_index,
+      cctv_number, // 탭순서
+      description,
     } = reqBody;
 
     const data = {
@@ -130,6 +136,8 @@ router.put(
       cctv_ip,
       cctv_port,
       local_index,
+      cctv_number, // 탭순서
+      description,
     };
 
     const updateData = [];

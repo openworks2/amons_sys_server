@@ -1,13 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const indexCreateFn = require("./lib/fillZero");
-// const {
-//   deleteAction,
-//   getFindAll,
-//   getFindByField,
-//   postInsert,
-//   putUpdate,
-// } = require("./config/connectionUtile");
 
 const connectionUtile = require("./config/connectionUtile");
 
