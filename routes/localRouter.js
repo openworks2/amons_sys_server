@@ -19,7 +19,7 @@ const INFO_LOCAL = "info_local";
 
 router.get(
   "/locals",
-  async (req, res, nextn) => {
+  async (req, res, next) => {
     try {
       await connectionUtile.getFindAll({
         table: INFO_LOCAL,
@@ -37,7 +37,7 @@ router.get(
 
 router.get(
   "/locals/:index",
-  async (req, res, nextn) => {
+  async (req, res, next) => {
     const { index: param } = req.params;
     try {
       await connectionUtile.getFindByField({
@@ -58,7 +58,7 @@ router.get(
 
 router.post(
   "/locals",
-  async (req, res, nextn) => {
+  async (req, res, next) => {
     const { body: reqBody } = req;
     const { local_name, plan_length, local_process, description } = reqBody;
 
@@ -96,7 +96,7 @@ router.post(
 
 router.put(
   "/locals/:index",
-  async (req, res, nextn) => {
+  async (req, res, next) => {
     const { index } = req.params;
     const { body: reqBody } = req;
     const { local_id, local_index, local_name, plan_length, local_process, description } = reqBody;
@@ -134,7 +134,7 @@ router.put(
 
 router.delete(
   "/locals/:id",
-  async (req, res, nextn) => {
+  async (req, res, next) => {
     const { id: param } = req.params;
     try {
       await connectionUtile.deleteAction({
