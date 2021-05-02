@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 
+var http = require("http").createServer(app);  //모듈사용
 const path = require("path");
 const cors = require('cors');
 const cookieParser = require('cookie-parser')
@@ -8,7 +9,7 @@ const bodyParser = require('body-parser');
 const logger = require('morgan');
 
 const port = process.env.PORT || 3000;
-
+var http = require("http").createServer(app);  //모듈사용
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -62,9 +63,40 @@ app.use("/api/monitor", monitorRouter);
 // app.use(bodyParser.json());
 // app.use(bodyParser.json({ limit : "100mb" })); 
 // app.use(bodyParser.urlencoded({ limit:"100mb", extended: false }));
+// const io = require("socket.io")(http, {
+//   cors: {
+//     origin: '*',
+//   }
+// });         //모듈 사용
 
 
+const io = require("socket.io")(http, {
+  cors: {
+    origin: '*',
+  }
+});         //모듈 사용
 
-app.listen(port, () => {
+app.set('io', io);
+
+io.on("connection", function (socket) {
+  console.log("소켓 접속 완료");
+
+  socket.on('disconnect', () => {
+    console.log('User has disconnected');
+  });
+
+  socket.on("roomjoin", (userid) => {  //roomjoin 이벤트명으로 데이터받기 //socket.on
+    console.log(userid);
+    // socket.join(userid);  
+  });
+  // socket.emit('receive', '성공하자!!!!!!!')             //userid로 방 만들기
+
+  socket.on("alert", (touserid) => {  //alet 이벤트로 데이터 받기 
+    console.log(touserid)
+    io.to(touserid).emit("heejewake", touserid);  //touserid: 클라이언트1이 보낸데이터"hwi"
+  });                                             //heejewake이벤트: hwi 에게 메시지 hwi를 보낸다
+});
+
+http.listen(port, () => {
   console.log(`express in running on ${port}`);
 });
