@@ -17,6 +17,7 @@ const weather = {
         pageNo: 1,
         dataType: 'JSON',
         currentData: moment().format("YYYYMMDD"),
+        baseTime: moment().format('HH00'),
         nx: 55,
         ny: 127,
     },
@@ -37,9 +38,34 @@ const weather = {
         _this.options.pageNo = opt.pageNo || _this.options.pageNo;
         _this.options.dataType = opt.dataType || _this.options.dataType;
         _this.options.currentData = opt.currentData || _this.options.currentData;
-        _this.options.nx = opt.nx || _this.options.nx;
-        _this.options.ny = opt.ny || _this.options.ny;
-        // _this.requestHandler();
+        _this.options.baseTime = (() => {
+            const curr = Number(moment().format('HH00'));
+            let _baseTime = '';
+            if (curr > 200 && curr <= 500) {
+                _baseTime = '0200'
+            }
+            else if (curr > 800 && curr <= 1100) {
+                _baseTime = '0800'
+            }
+            else if (curr > 1100 && curr <= 1400) {
+                _baseTime = '1100'
+            }
+            else if (curr > 1400 && curr <= 1700) {
+                _baseTime = '1400'
+            }
+            else if (curr > 1700 && curr <= 2000) {
+                _baseTime = '1700'
+            }
+            else if (curr > 1700 && curr <= 2000) {
+                _baseTime = '1700'
+            }
+            else if (curr > 2000 && curr <= 2300) {
+                _baseTime = '2000'
+            }
+            return _baseTime
+        })();
+        _this.options.nx = _this.location.local_x || _this.options.nx;
+        _this.options.ny = _this.location.local_y || _this.options.ny;
         _this.getLocation();
         _this.scheduleAction();
     },
@@ -50,10 +76,11 @@ const weather = {
         const pageNo = _this.options.pageNo;
         const dataType = _this.options.dataType;
         const currentDate = _this.options.currentData;
+        const baseTime = _this.options.baseTime;
         const nx = _this.options.nx;
         const ny = _this.options.ny;
-
-        const url = `${_this.address}?serviceKey=${apiKey}&numOfRows=${numOfRows}&pageNo=${pageNo}&dataType=${dataType}&base_date=${currentDate}&base_time=1100&nx=${nx}&ny=${ny}`;
+        console.log('000-->', baseTime)
+        const url = `${_this.address}?serviceKey=${apiKey}&numOfRows=${numOfRows}&pageNo=${pageNo}&dataType=${dataType}&base_date=${currentDate}&base_time=${baseTime}&nx=${nx}&ny=${ny}`;
         // console.log(url)
         request(url, (error, response, body) => {
             console.error('error:', error); // Print the error if one occurred
@@ -61,8 +88,8 @@ const weather = {
             if (error) {
             } else {
                 const _body = JSON.parse(body);
-                // console.log(_body);
-                _this.body = _body;
+                console.log(_body);
+                _this.body = _body.response.body ? _body.response.body.items.item : _body;
             }
         });
     },
@@ -70,7 +97,7 @@ const weather = {
         const _this = this;
         const _query = `SELECT * FROM ${_this.table} WHERE active=1;`;
 
-        pool.getConnection((err, connection) => { 
+        pool.getConnection((err, connection) => {
             if (err) {
                 console.error(err);
 
@@ -89,6 +116,7 @@ const weather = {
                             local_x,
                             local_y
                         }
+                        console.log('>>>>>>>>>>>>>>>>', _this.location)
                         _this.requestHandler();
                     }
                 });
@@ -113,8 +141,8 @@ const weather = {
                     } else {
                         // console.log('results->', results)
 
-                        _this.requestHandler();
-                        _this.scheduleAction();
+                        _this.getLocation();
+
                     }
                 });
             }
@@ -123,7 +151,10 @@ const weather = {
     },
     scheduleAction() {
         const _this = this;
-        _this.job = schedule.scheduleJob('*/3 * * *', () => {
+        if (_this.job) {
+            _this.job.cancel()
+        }
+        _this.job = schedule.scheduleJob('0 0 */3 * * *', () => {
             _this.requestHandler();
             console.log('hi!')
         })
