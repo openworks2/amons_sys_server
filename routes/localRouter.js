@@ -69,8 +69,9 @@ router.post(
       local_index: _localIndex,
       local_name,
       plan_length,
-      local_process,
-      description
+      local_process: 1,
+      description,
+      local_used: 1
     };
 
     try {
@@ -136,11 +137,23 @@ router.delete(
   "/locals/:id",
   async (req, res, next) => {
     const { id: param } = req.params;
+
+    const data = {
+      modified_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
+      ...req.body,
+      local_used: 0
+    };
+
+    const updateData = [];
+    updateData[0] = data;
+    updateData[1] = param;
+
     try {
-      await connectionUtile.deleteAction({
+      await connectionUtile.putUpdate({
         table: INFO_LOCAL,
         field: "local_id",
-        param,
+        updateData,
+        body: req.body,
         req,
         res,
       })();
@@ -152,5 +165,26 @@ router.delete(
     }
   }
 );
+
+// router.delete(
+//   "/locals/:id",
+//   async (req, res, next) => {
+//     const { id: param } = req.params;
+//     try {
+//       await connectionUtile.deleteAction({
+//         table: INFO_LOCAL,
+//         field: "local_id",
+//         param,
+//         req,
+//         res,
+//       })();
+//     } catch (error) {
+//       console.error(error);
+//       res
+//         .status(404)
+//         .json({ status: 404, message: "CallBack Async Function Error" });
+//     }
+//   }
+// );
 
 module.exports = router;

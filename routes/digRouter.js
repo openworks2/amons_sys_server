@@ -57,10 +57,11 @@ router.post(
   "/digs",
   async (req, res, next) => {
     const { body: reqBody } = req;
-    const { created_date, dig_length, local_index, description } = reqBody;
+    const { record_date, dig_length, local_index, description } = reqBody;
 
     const insertData = {
-      created_date,
+      created_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
+      record_date,
       dig_length,
       local_index,
       description
@@ -71,7 +72,7 @@ router.post(
         table: LOG_DIG,
         insertData,
         key: "dig_seq",
-        body:reqBody,
+        body: reqBody,
         req,
         res,
       })();
@@ -89,10 +90,11 @@ router.put(
   async (req, res, next) => {
     const { index } = req.params;
     const { body: reqBody } = req;
-    const { dig_length, local_index, description } = reqBody;
+    const { record_date, dig_length, local_index, description } = reqBody;
 
     const data = {
       modified_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
+      record_date,
       dig_length,
       local_index,
       description
@@ -107,7 +109,7 @@ router.put(
         table: LOG_DIG,
         field: "dig_seq",
         updateData,
-        body:reqBody,
+        body: reqBody,
         req,
         res,
       })();
