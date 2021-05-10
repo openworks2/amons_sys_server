@@ -40,28 +40,31 @@ const weather = {
         _this.options.currentData = opt.currentData || _this.options.currentData;
         _this.options.baseTime = (() => {
             const curr = Number(moment().format('HH00'));
+            console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>curr-->', typeof curr)
             let _baseTime = '';
-            if (curr > 200 && curr <= 500) {
+            if (curr > 200 || curr <= 500) {
                 _baseTime = '0200'
             }
-            else if (curr > 800 && curr <= 1100) {
+            else if (curr > 800 || curr <= 1100) {
                 _baseTime = '0800'
             }
-            else if (curr > 1100 && curr <= 1400) {
+            else if (curr > 1100 || curr <= 1400) {
                 _baseTime = '1100'
             }
-            else if (curr > 1400 && curr <= 1700) {
+            else if (curr > 1400 || curr <= 1700) {
                 _baseTime = '1400'
             }
-            else if (curr > 1700 && curr <= 2000) {
+            else if (curr > 1700 || curr <= 2000) {
                 _baseTime = '1700'
             }
-            else if (curr > 1700 && curr <= 2000) {
+            else if (curr > 1700 || curr <= 2000) {
                 _baseTime = '1700'
             }
-            else if (curr > 2000 && curr <= 2300) {
+            else if (curr > 2000 || curr <= 2300) {
                 _baseTime = '2000'
             }
+            console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>curr-->',  curr)
+            console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>_baseTime-->',  _baseTime)
             return _baseTime
         })();
         _this.options.nx = _this.location.local_x || _this.options.nx;
