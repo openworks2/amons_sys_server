@@ -110,6 +110,7 @@ router.post("/accounts", (req, res, next) => {
     acc_tel,
     acc_mail,
     acc_role,
+    acc_description
   } = reqBody;
 
   const hashDigest = CryptoJS.SHA256(acc_password).toString();
@@ -129,6 +130,7 @@ router.post("/accounts", (req, res, next) => {
     acc_tel,
     acc_mail,
     acc_role,
+    acc_description
   };
 
   const _query = queryConfig.insert(TB_ACCOUNT);
@@ -152,7 +154,6 @@ router.post("/accounts", (req, res, next) => {
           } else {
             const resObj = {
               created_date: InsertData.created_date,
-              modified_date: results.modified_date,
               acc_id: results.insertId,
               acc_name: reqBody.acc_name,
               acc_user_id: reqBody.acc_user_id,
@@ -160,6 +161,7 @@ router.post("/accounts", (req, res, next) => {
               acc_tel: reqBody.acc_tel,
               acc_mail: reqBody.acc_mail,
               acc_role: reqBody.acc_role,
+              acc_description: reqBody.acc_description
             };
             res.json(resObj);
           }
@@ -170,6 +172,89 @@ router.post("/accounts", (req, res, next) => {
   });
 });
 // 계정 수정 (method: PUT)
+router.put('/accounts/:index', (req, res, next) => {
+  const { index } = req.params;
+  const { body: reqBody } = req;
+  console.log(index)  
+  console.log(reqBody)
+  const {
+    acc_name,
+    acc_user_id,
+    acc_password,
+    acc_phone,
+    acc_tel,
+    acc_mail,
+    acc_role,
+    acc_description
+  } = reqBody;
+
+  const hashDigest = CryptoJS.SHA256(acc_password).toString();
+  console.log("hashDigest-->", hashDigest);
+  var salt = CryptoJS.lib.WordArray.random(128 / 8);
+  const key128Bits = CryptoJS.PBKDF2("Secret Passphrase", salt, {
+    keySize: 128 / 32,
+  }).toString();
+  console.log("key128Bits->>", key128Bits);
+
+  const data = {
+    modified_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
+    acc_name,
+    acc_user_id,
+    acc_password: `${hashDigest}${key128Bits}`,
+    acc_salt: key128Bits,
+    acc_phone,
+    acc_tel,
+    acc_mail,
+    acc_role,
+    acc_description
+  };
+
+
+  const updateData = [];
+  updateData[0] = data;
+  updateData[1] = index;
+
+
+  const _query = queryConfig.update(TB_ACCOUNT, 'acc_id');
+  pool.getConnection((err, connection) => {
+    if (err) {
+      console.error(err);
+      res
+        .status(404)
+        .json({ status: 404, message: "Pool getConnection Error" });
+    } else {
+      connection.query(
+        _query,
+        updateData,
+        (err, results, field) => {
+          if (err) {
+            console.error(err);
+            res
+              .status(404)
+              .json({ status: 404, message: "Connection Query Error" });
+          } else {
+            const resObj = {
+              ...reqBody,
+              modified_date: data.modified_date,
+              acc_name: reqBody.acc_name,
+              acc_user_id: reqBody.acc_user_id,
+              acc_phone: reqBody.acc_phone,
+              acc_tel: reqBody.acc_tel,
+              acc_mail: reqBody.acc_mail,
+              acc_role: reqBody.acc_role,
+              acc_description: reqBody.acc_description,
+            };
+            res.json(resObj);
+          }
+        }
+      );
+    }
+    connection.release();
+  });
+
+});
+
+
 
 // 계정 삭제 (method: DELETE)
 router.delete(

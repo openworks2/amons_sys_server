@@ -22,7 +22,7 @@ const bleConfig = {
                     }
                 })
             }
-            console.log(_this.items)
+            // console.log(_this.items)
             connection.release();
         });
     }

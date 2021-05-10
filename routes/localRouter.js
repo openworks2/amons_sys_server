@@ -16,13 +16,14 @@ require("moment-timezone");
 moment.tz.setDefault("Asia/Seoul");
 
 const INFO_LOCAL = "info_local";
+const INFO_LOCAL_VIEW = "info_local_view";
 
 router.get(
   "/locals",
   async (req, res, next) => {
     try {
       await connectionUtile.getFindAll({
-        table: INFO_LOCAL,
+        table: INFO_LOCAL_VIEW,
         req,
         res,
       })();
@@ -41,7 +42,7 @@ router.get(
     const { index: param } = req.params;
     try {
       await connectionUtile.getFindByField({
-        table: INFO_LOCAL,
+        table: INFO_LOCAL_VIEW,
         param,
         field: "local_index",
         req,
