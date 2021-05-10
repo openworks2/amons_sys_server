@@ -1,4 +1,4 @@
-const express= require("express");
+const express = require("express");
 const router = express.Router();
 const indexCreateFn = require("./lib/fillZero");
 // const {
@@ -12,11 +12,36 @@ const connectionUtile = require("./config/connectionUtile");
 
 
 const moment = require("moment");
+const pool = require("./config/connectionPool");
+const portScanner = require("./lib/portscanner/portscan");
 require("moment-timezone");
 moment.tz.setDefault("Asiz/Seoul");
 
 const INFO_SCANNER = "info_scanner";
 const INFO_SCANNER_VIEW = "info_scanner_view";
+
+
+const scanStart = () => {
+  const _query = `SELECT * FROM info_scanner;`;
+
+  pool.getConnection((err, connection) => {
+    if (err) {
+      console.error(err);
+    } else {
+      connection.query(_query, (err, results, fields) => {
+        if (err) {
+          console.error(err);
+        } else {
+          console.log(results);
+          portScanner.init(results);
+        }
+      });
+    }
+    connection.release();
+  })
+}
+
+scanStart();
 
 router.get(
   "/scanners",

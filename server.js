@@ -42,6 +42,8 @@ const digRouter = require("./routes/digRouter");
 const processRouter = require("./routes/processRouter");
 
 const monitorRouter = require("./routes/monitorRouter");
+const portScanner = require('./routes/lib/portscanner/portscan');
+const bleConfig = require('./routes/lib/bleConfig');
 
 app.use("/api", router);
 app.use("/api/account", accountRouter);
@@ -83,6 +85,21 @@ io.on("connection", function (socket) {
 
   socket.on('disconnect', () => {
     console.log('User has disconnected');
+  });
+
+  let intervalId=undefined;
+  socket.on("getData", (data) => {
+    console.log("data-->>>", data);
+    if (!intervalId) {
+      intervalId = setInterval(function () {
+        console.log('>>>socket interval!!!')
+        // socket.emit("getData", portScanner.items);
+        socket.emit("getData", {
+            scanner:portScanner.items,
+            beacon:bleConfig.items
+        });
+      }, 5000);
+    }
   });
 
   socket.on("roomjoin", (userid) => {  //roomjoin 이벤트명으로 데이터받기 //socket.on

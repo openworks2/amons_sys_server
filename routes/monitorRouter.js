@@ -8,12 +8,15 @@ const moment = require("moment");
 require("moment-timezone");
 moment.tz.setDefault("Asiz/Seoul");
 
-const upload = require('./lib/fileupload');
-const multer = require('multer');
 const pool = require("./config/connectionPool");
 
-const INFO_MONITOR_VIEW = "info_monitor_view";
+const bleConfig = require('./lib/bleConfig');
 
+setInterval(()=>{
+  bleConfig.setData();
+}, 5000);
+
+const INFO_MONITOR_VIEW = "info_monitor_view";
 router.get(
   "/monitors",
   async (req, res, next) => {
@@ -30,6 +33,53 @@ router.get(
   }
 );
 
+router.get(
+  "/scanners", (req, res, next) => {
+    const _query = `SELECT * FROM info_scanner_view;`;
+    pool.getConnection((err, connection) => {
+      if (err) {
+        res
+          .status(404)
+          .json({ status: 404, message: "Pool getConnection Error" });
+      } else {
+        connection.query(_query, (err, results, field) => {
+          if (err) {
+            res
+              .status(404)
+              .json({ status: 404, message: "Connection Query Error" });
+          } else {
+            res.json(results);
+          }
+        })
+      }
+      connection.release();
+    });
+  }
+);
+
+router.get("/beacons", (req, res, next) => {
+
+  const _query = `SELECT * FROM ble_input_beacon_view;`;
+
+  pool.getConnection((err, connection) => {
+    if (err) {
+      res
+        .status(404)
+        .json({ status: 404, message: "Pool getConnection Error" });
+    } else {
+      connection.query(_query, (err, results, field) => {
+        if (err) {
+          res
+            .status(404)
+            .json({ status: 404, message: "Connection Query Error" });
+        } else {
+          res.json(results);
+        }
+      })
+    }
+    connection.release();
+  });
+});
 
 /**
  * @description router 내에서 socket 통신 예제
@@ -37,7 +87,7 @@ router.get(
 // router.get(
 //   "/monitors", (req, res, next) => {
 //     const _query = `select * from info_monitor_view;`;
-    
+
 //     pool.getConnection((err, connection) => {
 //       if (err) {
 
@@ -58,6 +108,7 @@ router.get(
 //     });
 //   }
 // );
+
 
 
 module.exports = router;
