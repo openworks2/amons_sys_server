@@ -59,14 +59,14 @@ router.post(
   "/processes",
   async (req, res, next) => {
     const { body: reqBody } = req;
-    const { prev_pcs_state, pcs_state, local_index, description } = reqBody;
+    const { prev_pcs_state, pcs_state, local_index, pcs_description } = reqBody;
 
     const insertData = {
       created_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
       prev_pcs_state,
       pcs_state,
       local_index,
-      description
+      pcs_description
     };
 
     try {
@@ -92,14 +92,14 @@ router.put(
   async (req, res, next) => {
     const { index } = req.params;
     const { body: reqBody } = req;
-    const { prev_pcs_state, pcs_state, local_index, description } = reqBody;
+    const { prev_pcs_state, pcs_state, local_index, pcs_description } = reqBody;
 
     const data = {
       modified_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
       prev_pcs_state,
       pcs_state,
       local_index,
-      description
+      pcs_description
     };
     console.log("update-->", data);
     const updateData = [];
