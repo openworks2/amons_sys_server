@@ -83,6 +83,38 @@ router.get(
   }
 );
 
+/**
+ * @description 스캐너 노선 그룹 조회
+ */
+router.get('/locals', (req, res, next) => {  
+  const _query = `SELECT * FROM INFO_SCANNER_VIEW GROUP BY local_index;`;
+
+  pool.getConnection((err, connection) => {
+    if (err) {
+      console.error(err);
+      res
+        .status(404)
+        .json({ status: 404, message: "Pool getConnection Error" });
+    } else {
+      connection.query(
+        _query,
+        (err, results, field) => {
+          if (err) {
+            console.error(err);
+            res
+              .status(404)
+              .json({ status: 404, message: "Connection Query Error" });
+          } else {
+
+            res.json(results);
+          }
+        }
+      );
+    }
+    connection.release();
+  });
+})
+
 router.post(
   "/scanners",
   async (req, res, next) => {

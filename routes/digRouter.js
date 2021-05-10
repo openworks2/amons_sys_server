@@ -80,11 +80,20 @@ const convertArrayToObject = (array, key) => {
 
 // 노선별 이력 조회
 /**
- * @description 노선별 이력 조회
+ * @description 한달치 노선별 이력 조회
  */
 router.get("/digs/local", (req, res, next) => {
+  // const _query = queryConfig.findByAllOrderBy(LOG_DIG, 'record_date', 'DESC');
 
-  const _query = queryConfig.findByAllOrderBy(LOG_DIG, 'record_date', 'DESC');
+  const fromDate = moment().subtract(1, 'months').format('YYYY-MM-DD 00:00:00'); //한단전
+  const toDate = moment().format('YYYY-MM-DD HH:mm:ss');
+
+  const _query = `SELECT * FROM log_dig 
+                WHERE DATE_FORMAT(record_date,"%Y-%m-%d %H:%i:%S") 
+                BETWEEN DATE_FORMAT("${fromDate}","%Y-%m-%d %H:%i:%S")
+                AND DATE_FORMAT("${toDate}","%Y-%m-%d %H:%i:%S")
+                ORDER BY record_date DESC;`;
+
   pool.getConnection((err, connection) => {
     if (err) {
       console.error(err);

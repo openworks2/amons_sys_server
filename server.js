@@ -37,6 +37,7 @@ const workerRouter = require("./routes/workerRouter");
 const cctvRouter = require("./routes/cctvRouter");
 const scannerRouter = require("./routes/scannerRouter");
 const weatherRouter = require("./routes/weatherRouter");
+const alarmRouter = require("./routes/alarmRouter");
 
 const digRouter = require("./routes/digRouter");
 const processRouter = require("./routes/processRouter");
@@ -56,6 +57,7 @@ app.use("/api/worker", workerRouter);
 app.use("/api/cctv", cctvRouter);
 app.use("/api/scanner", scannerRouter);
 app.use("/api/weather", weatherRouter);
+app.use("/api/alarm", alarmRouter);
 
 app.use("/api/dig", digRouter);
 app.use("/api/process", processRouter);
