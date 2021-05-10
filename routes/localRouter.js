@@ -16,13 +16,14 @@ require("moment-timezone");
 moment.tz.setDefault("Asia/Seoul");
 
 const INFO_LOCAL = "info_local";
+const INFO_LOCAL_VIEW = "info_local_view";
 
 router.get(
   "/locals",
   async (req, res, next) => {
     try {
       await connectionUtile.getFindAll({
-        table: INFO_LOCAL,
+        table: INFO_LOCAL_VIEW,
         req,
         res,
       })();
@@ -41,7 +42,7 @@ router.get(
     const { index: param } = req.params;
     try {
       await connectionUtile.getFindByField({
-        table: INFO_LOCAL,
+        table: INFO_LOCAL_VIEW,
         param,
         field: "local_index",
         req,
@@ -60,7 +61,7 @@ router.post(
   "/locals",
   async (req, res, next) => {
     const { body: reqBody } = req;
-    const { local_name, plan_length, local_process, description } = reqBody;
+    const { local_name, plan_length, local_process, local_description } = reqBody;
 
     const _localIndex = indexCreateFn("LC");
 
@@ -70,7 +71,7 @@ router.post(
       local_name,
       plan_length,
       local_process: 1,
-      description,
+      local_description,
       local_used: 1
     };
 
@@ -100,7 +101,7 @@ router.put(
   async (req, res, next) => {
     const { index } = req.params;
     const { body: reqBody } = req;
-    const { local_id, local_index, local_name, plan_length, local_process, description } = reqBody;
+    const { local_id, local_index, local_name, plan_length, local_description, local_used } = reqBody;
     console.log(reqBody)
     const data = {
       modified_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
@@ -108,8 +109,7 @@ router.put(
       local_index,
       local_name,
       plan_length,
-      local_process,
-      description
+      local_description
     };
     const updateData = [];
     updateData[0] = data;
