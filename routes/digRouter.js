@@ -12,6 +12,8 @@ const connectionUtile = require("./config/connectionUtile");
 
 
 const moment = require("moment");
+const pool = require("./config/connectionPool");
+const queryConfig = require("./config/query/configQuery");
 require("moment-timezone");
 moment.tz.setDefault("Asiz/Seoul");
 
@@ -32,26 +34,83 @@ router.get("/digs", async (req, res, next) => {
   }
 });
 
-router.get(
-  "/digs/:index",
-  async (req, res, next) => {
-    const { index: param } = req.params;
-    try {
-      await connectionUtile.getFindByField({
-        table: LOG_DIG,
-        param,
-        field: "dig_seq",
-        req,
-        res,
-      })();
-    } catch (error) {
-      console.error(error);
+// router.get(
+//   "/digs/:index",
+//   async (req, res, next) => {
+//     const { index: param } = req.params;
+//     try {
+//       await connectionUtile.getFindByField({
+//         table: LOG_DIG,
+//         param,
+//         field: "dig_seq",
+//         req,
+//         res,
+//       })();
+//     } catch (error) {
+//       console.error(error);
+//       res
+//         .status(404)
+//         .json({ status: 404, message: "CallBack Async Function Error" });
+//     }
+//   }
+// );
+
+// local array to object
+const convertArrayToObject = (array, key) => {
+  const initialValue = {};
+  return array.reduce((obj, item) => {
+    if (obj.hasOwnProperty(item[key])) {
+      return {
+        ...obj,
+        [item[key]]: [
+          ...obj[item[key]],
+          item
+        ]
+      }
+    } else {
+      let itemArray = [];
+      itemArray.push(item)
+      return {
+        ...obj,
+        [item[key]]: itemArray,
+      };
+    }
+  }, initialValue);
+};
+
+// 노선별 이력 조회
+/**
+ * @description 노선별 이력 조회
+ */
+router.get("/digs/local", (req, res, next) => {
+
+  const _query = queryConfig.findByAllOrderBy(LOG_DIG, 'record_date', 'DESC');
+  pool.getConnection((err, connection) => {
+    if (err) {
+      console.error(err);
       res
         .status(404)
-        .json({ status: 404, message: "CallBack Async Function Error" });
+        .json({ status: 404, message: "Pool getConnection Error" });
+    } else {
+      connection.query(_query, (err, results, field) => {
+        if (err) {
+          console.error(err);
+          res
+            .status(404)
+            .json({ status: 404, message: "Connection Query Error" });
+        } else {
+          const responseData = convertArrayToObject(results, 'local_index');
+          // console.log(test);
+
+          res.json(responseData);
+        }
+      });
+
     }
-  }
-);
+    connection.release();
+  });
+});
+
 
 router.post(
   "/digs",
@@ -84,6 +143,54 @@ router.post(
     }
   }
 );
+
+/**
+ * @description 노선 기간별 검색
+ * @body {object} 객체
+ * @property {string} local_index
+ * @property {string} from_date
+ * @property {string} to_date
+ */
+router.post(
+  "/digs/search", (req, res, next) => {
+    const { body: reqBody } = req;
+    const { local_index, from_date, to_date } = reqBody;
+
+    const _query = `SELECT * FROM log_dig 
+                    WHERE DATE_FORMAT(record_date,"%Y-%m-%d %H:%i:%S") 
+                    BETWEEN DATE_FORMAT("${from_date}","%Y-%m-%d %H:%i:%S")
+                    AND DATE_FORMAT("${to_date}","%Y-%m-%d %H:%i:%S")
+                    AND local_index="${local_index}"
+                    ORDER BY record_date DESC;`;
+
+    pool.getConnection((err, connection) => {
+      if (err) {
+        console.error(err);
+        res
+          .status(404)
+          .json({ status: 404, message: "Pool getConnection Error" });
+      } else {
+        connection.query(
+          _query,
+          (err, results, field) => {
+            if (err) {
+              console.error(err);
+              res
+                .status(404)
+                .json({ status: 404, message: "Connection Query Error" });
+            } else {
+
+              res.json(results);
+            }
+          }
+        );
+      }
+      connection.release();
+    });
+  });
+
+
+
 
 router.put(
   "/digs/:index",
@@ -142,5 +249,7 @@ router.delete(
     }
   }
 );
+
+
 
 module.exports = router;

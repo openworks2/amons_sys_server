@@ -3,6 +3,10 @@ const queryConfig = {
     const query = `SELECT * FROM ${table};`;
     return query;
   },
+  findByAllOrderBy(table, field = "id", orderby = "ASC") {
+    const query = `SELECT * FROM ${table} ORDER BY \`${field}\` ${orderby};`;
+    return query;
+  },
   findByField(table, field = "id") {
     const query = `SELECT * FROM ${table} WHERE \`${field}\`=?;`;
     return query;
