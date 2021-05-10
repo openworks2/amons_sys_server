@@ -50,7 +50,7 @@ const portScanner = {
             // Status should be 'open' since the HTTP server is listening on that port
             // console.log(`${ip} is Status at port ${port} is ${status}`);
 
-            if (error) console.error(error)
+            // if (error) console.error(error)
 
 
             const updateObj = {
@@ -75,11 +75,11 @@ const portScanner = {
             const closedCount = updateObj.closed_count;
 
             if (status === 'open' && PrevStatus !== status) {
-                console.log('STATUS OPEN CHANGE!!!!')
+                // console.log('STATUS OPEN CHANGE!!!!')
                 _this.recodeUpdate(updateObj)
             }
             else if (status === 'closed' && closedCount === 5) {
-                console.log('STATUS CLOSE CHANGE!!!!')
+                // console.log('STATUS CLOSE CHANGE!!!!')
                 _this.recodeUpdate(updateObj)
             }
 
@@ -99,7 +99,7 @@ const portScanner = {
 
         pool.getConnection((err, connection) => {
             if (err) {
-                console.error(err);
+                // console.error(err);
             } else {
                 connection.query(_query, updateData, (err, results, fields) => {
                     if (err) {
