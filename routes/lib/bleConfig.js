@@ -15,7 +15,7 @@ const bleConfig = {
             } else {
                 connection.query(_query, (err, results, field) => {
                     if (err) {
-                        console.error("Connection Query Error")
+                        // console.error("Connection Query Error")
 
                     } else {
                         _this.items=results;
