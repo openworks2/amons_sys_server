@@ -28,6 +28,30 @@ const connectionUtile = {
         connection.release();
       });
   },
+  getFindAllOrderByField({ table, field, orderby, req, res }) {
+    const _query = queryConfig.findByAllOrderBy(table, field, orderby);
+    return () =>
+      pool.getConnection((err, connection) => {
+        if (err) {
+          console.error(err);
+          res
+            .status(404)
+            .json({ status: 404, message: "Pool getConnection Error" });
+        } else {
+          connection.query(_query, (err, results, field) => {
+            if (err) {
+              console.error(err);
+              res
+                .status(404)
+                .json({ status: 404, message: "Connection Query Error" });
+            } else {
+              res.json(results);
+            }
+          });
+        }
+        connection.release();
+      });
+  },
   getFindByField({
     table,
     param,
@@ -94,7 +118,7 @@ const connectionUtile = {
                   ...insertData,
                   [key]: results.insertId,
                 };
-                console.log('resObj=>',resObj)
+                console.log('resObj=>', resObj)
 
                 res.json(resObj);
               }
@@ -135,7 +159,7 @@ const connectionUtile = {
                   ...body,
                   ...updateData[0],
                 };
-                console.log('put resObj=>',resObj)
+                console.log('put resObj=>', resObj)
                 res.json(resObj);
               }
             }
