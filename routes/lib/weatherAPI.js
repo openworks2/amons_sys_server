@@ -63,8 +63,8 @@ const weather = {
             else if (curr > 2000 || curr <= 2300) {
                 _baseTime = '2000'
             }
-            console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>curr-->',  curr)
-            console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>_baseTime-->',  _baseTime)
+            console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>curr-->', curr)
+            console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>_baseTime-->', _baseTime)
             return _baseTime
         })();
         _this.options.nx = _this.location.local_x || _this.options.nx;
@@ -127,18 +127,25 @@ const weather = {
             connection.release();
         });
     },
-    changLocation(code) {
+    changLocation(obj) {
         const _this = this;
+        const { kma_sido, kma_gun, kma_dong } = obj;
 
-        const _query = `UPDATE ${_this.table} SET active=1 WHERE code=${code};
-                        UPDATE ${_this.table} SET active=0 WHERE NOT code=${code};`;
+        // const _query = `UPDATE ${_this.table} SET active=1 WHERE code=${code};
+        //                 UPDATE ${_this.table} SET active=0 WHERE NOT code=${code};`;
+        const _query_1 = `UPDATE ${_this.table} SET active=0 
+                            WHERE active=1;`;
+        const _query_2 = `UPDATE ${_this.table} SET active=1 
+                            WHERE sido LIKE "%${kma_sido}%" 
+                            AND gun LIKE "%${kma_gun}%"
+                            AND dong LIKE "%${kma_dong}%";`;
 
         pool.getConnection((err, connection) => {
             if (err) {
                 console.error(err);
 
             } else {
-                connection.query(_query, (err, results, field) => {
+                connection.query(_query_1+_query_2, (err, results, field) => {
                     if (err) {
                         console.error(err);
                     } else {

@@ -42,6 +42,7 @@ const alarmRouter = require("./routes/alarmRouter");
 const digRouter = require("./routes/digRouter");
 const processRouter = require("./routes/processRouter");
 const bleRouter = require("./routes/bleRouter");
+const envRouter = require("./routes/envRouter");
 
 const monitorRouter = require("./routes/monitorRouter");
 const portScanner = require('./routes/lib/portscanner/portscan');
@@ -63,6 +64,7 @@ app.use("/api/alarm", alarmRouter);
 app.use("/api/dig", digRouter);
 app.use("/api/process", processRouter);
 app.use("/api/ble", bleRouter);
+app.use("/api/environment", envRouter);
 
 app.use("/api/monitor", monitorRouter);
 
