@@ -96,13 +96,15 @@ io.on("connection", function (socket) {
     console.log("data-->>>", data);
     if (!intervalId) {
       intervalId = setInterval(function () {
-        console.log('>>>socket interval!!!')
+        // console.log('>>>socket interval!!!')
         // socket.emit("getData", portScanner.items);
         socket.emit("getData", {
             scanner:portScanner.items,
             beacon:bleConfig.items
         });
       }, 5000);
+    } else {
+      console.log('--->',intervalId)
     }
   });
 

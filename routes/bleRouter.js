@@ -60,6 +60,7 @@ router.get(
     }
 );
 
+
 /**
  * @description 잔류 이력 차량 조회
  */
@@ -179,7 +180,41 @@ router.post(
             connection.release();
         });
     });
+/**
+ * @description 현재 잔류 인원 및 차량 조회
+ * @param {string} 타입 'worker' / 'vehicle
+ */
+router.get("/bles/input/:type", (req, res, next) => {
+    const { type } = req.params;
+    const _value = type === 'worker' ? 1 : 2;
+    const _query = `SELECT * FROM ble_input_beacon_view 
+                WHERE bc_used_type = ${_value}
+                ORDER BY bc_input_time DESC;`;
 
+    pool.getConnection((err, connection) => {
+        if (err) {
+            console.error(err);
+            res
+                .status(404)
+                .json({ status: 404, message: "Pool getConnection Error" });
+        } else {
+            connection.query(_query, (err, results, field) => {
+                if (err) {
+                    console.error(err);
+                    res
+                        .status(404)
+                        .json({ status: 404, message: "Connection Query Error" });
+                } else {
+                    // console.log(test);
+
+                    res.json(results);
+                }
+            });
+
+        }
+        connection.release();
+    });
+});
 
 /**
  * @description 작업자 막장 잔류이력 검색
@@ -190,7 +225,149 @@ router.post(
  * @property {string} wk_name 작업자 이름
  * @property {string} wk_co_index 작업자 소속사
  */
-router.post('/bles/worker/download', function (req, res, next) {
+router.post('/bles/input/worker/search', (req, res, next) => {
+
+    const { body: reqBody } = req;
+    const { local_index = null, from_date, to_date, wk_name = null, wk_co_index = null } = reqBody;
+
+    const _query = `SELECT * FROM ble_input_beacon_view
+                    WHERE DATE_FORMAT(bc_input_time,"%Y-%m-%d %H:%i:%S") 
+                    BETWEEN DATE_FORMAT("${from_date}","%Y-%m-%d %H:%i:%S")
+                    AND DATE_FORMAT("${to_date}","%Y-%m-%d %H:%i:%S")
+                    ${local_index !== null ? `AND local_index='${local_index}'` : ``}
+                    ${wk_co_index !== null ? `AND wk_co_index = "${wk_co_index}"` : ``}
+                    ${wk_name !== null ? `AND wk_name LIKE '%${wk_name}%'` : ``}
+                    ORDER BY bc_input_time DESC;`;
+    console.log(_query)
+    pool.getConnection((err, connection) => {
+        if (err) {
+            console.error(err);
+            res
+                .status(404)
+                .json({ status: 404, message: "Pool getConnection Error" });
+        } else {
+            connection.query(
+                _query,
+                (err, results, field) => {
+                    if (err) {
+                        console.error(err);
+                        res
+                            .status(404)
+                            .json({ status: 404, message: "Connection Query Error" });
+                    } else {
+
+                        res.json(results);
+
+                    }
+                }
+            );
+        }
+        connection.release();
+    });
+});
+
+/**
+ * @description 작업자 막장 잔류이력 검색
+ * @body {object} 객체
+ * @property {string} local_index 노선 인덱스
+ * @property {string} from_date
+ * @property {string} to_date
+ * @property {string} vh_name 작업자 이름
+ * @property {string} vh_co_index 작업자 소속사
+ */
+router.post('/bles/input/vehicle/search', (req, res, next) => {
+
+    const { body: reqBody } = req;
+    const { local_index = null, from_date, to_date, vh_name = null, vh_co_index = null } = reqBody;
+
+    const _query = `SELECT * FROM ble_input_beacon_view
+                    WHERE DATE_FORMAT(bc_input_time,"%Y-%m-%d %H:%i:%S") 
+                    BETWEEN DATE_FORMAT("${from_date}","%Y-%m-%d %H:%i:%S")
+                    AND DATE_FORMAT("${to_date}","%Y-%m-%d %H:%i:%S")
+                    ${local_index !== null ? `AND local_index='${local_index}'` : ``}
+                    ${vh_co_index !== null ? `AND vh_co_index = "${vh_co_index}"` : ``}
+                    ${vh_name !== null ? `AND vh_name LIKE '%${vh_name}%'` : ``}
+                    ORDER BY bc_input_time DESC;`;
+    console.log(_query)
+    pool.getConnection((err, connection) => {
+        if (err) {
+            console.error(err);
+            res
+                .status(404)
+                .json({ status: 404, message: "Pool getConnection Error" });
+        } else {
+            connection.query(
+                _query,
+                (err, results, field) => {
+                    if (err) {
+                        console.error(err);
+                        res
+                            .status(404)
+                            .json({ status: 404, message: "Connection Query Error" });
+                    } else {
+
+                        res.json(results);
+
+                    }
+                }
+            );
+        }
+        connection.release();
+    });
+});
+
+/**
+ * @description 잔류 작업자 강제 퇴출
+ * @param {string} bc_index info_beacon 인덱스
+ */
+ router.get("/bles/out/:index",
+ async (req, res, next) => {
+     const { index } = req.params;
+
+     const data = {
+         bc_io_state: 'o',
+         bc_input_time: null,
+         bc_out_time: moment().format('YYYY-MM-DD HH:mm:ss.SSS')
+     };
+
+     const updateData = [];
+     updateData[0] = data;
+     updateData[1] = index;
+
+     const _resData = {
+         ...data,
+         bc_index: index
+     }
+
+     try {
+         await connectionUtile.putUpdate({
+             table: 'info_beacon',
+             field: "bc_index",
+             updateData,
+             body: _resData,
+             req,
+             res,
+         })();
+     } catch (error) {
+         console.error(error);
+         res
+             .status(404)
+             .json({ status: 404, message: "CallBack Async Function Error" });
+     }
+
+ });
+
+
+/**
+ * @description 작업자 막장 잔류이력 다운로드
+ * @body {object} 객체
+ * @property {string} local_index 노선 인덱스
+ * @property {string} from_date
+ * @property {string} to_date
+ * @property {string} wk_name 작업자 이름
+ * @property {string} wk_co_index 작업자 소속사
+ */
+router.post('/bles/worker/download', (req, res, next) => {
 
     const { body: reqBody } = req;
     const { local_index = null, from_date, to_date, wk_name = null, wk_co_index = null } = reqBody;
@@ -229,9 +406,8 @@ router.post('/bles/worker/download', function (req, res, next) {
         }
         connection.release();
     });
-
-
 });
+
 
 const excelDownHandler = (data) => {
     let wb = new xl.Workbook();
@@ -287,44 +463,53 @@ const excelDownHandler = (data) => {
         for (let j = 1; j < 9; j++) {
             if (j == 1) {
                 // 노선
-                const localName = '시점함양';
+                const localName = data[i].local_name;
                 ws.cell(index, j).string(localName).style(style1);
             }
             else if (j == 2) {
                 // 이름
-                const workerName = '김공사';
+                const workerName = data[i].wk_name;
                 ws.cell(index, j).string(workerName).style(style1);
             }
             else if (j == 3) {
                 // 소속사
-                const company = '오픈웍스';
+                const company = data[i].wk_co_name;
                 ws.cell(index, j).string(company).style(style1);
             }
             else if (j == 4) {
                 // 직위
-                let position = `공사차장`;
+                let position = data[i].wk_position;
                 // let age = `${today.getFullYear() - birthDate.getFullYear() + 1}세`;
                 ws.cell(index, j).string(position).style(style1);
             }
             else if (j == 5) {
                 // 국적
-                const nation = '한국';
+                const nation = data[i].wk_nation;
                 ws.cell(index, j).string(nation).style(style1);
             }
             else if (j == 6) {
                 //진입일시
-                const inputDate = '2021-04-09 08:59:30';
+                const inputDate = moment(data[i].bc_input_time).format('YYYY-MM-DD HH:mm:ss')
                 ws.cell(index, j).string(inputDate).style(style1);
             }
             else if (j == 7) {
                 //퇴출일시
-                const inputDate = '2021-04-09 08:59:30';
+                const inputDate = '-'
                 ws.cell(index, j).string(inputDate).style(style1);
             }
             else if (j == 8) {
                 //막장 체류시간
-                const inputDate = '2021-04-09 08:59:30';
-                ws.cell(index, j).string(inputDate).style(style1);
+                const current = moment();
+                const inputDate = moment(data[i].bc_input_time);
+                const delayDate = moment.duration(current.diff(inputDate));
+                const diffTime = {
+                    day: delayDate.days(),
+                    hour: delayDate.hours(),
+                    minute: delayDate.minutes(),
+                    second: delayDate.seconds(),
+                }
+                const result = `${diffTime.day}일 ${diffTime.hour}시간 ${diffTime.minute}분 ${diffTime.second}초`
+                ws.cell(index, j).string(result).style(style1);
             }
         }
     }

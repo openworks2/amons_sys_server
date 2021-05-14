@@ -175,7 +175,7 @@ router.post("/accounts", (req, res, next) => {
 router.put('/accounts/:index', (req, res, next) => {
   const { index } = req.params;
   const { body: reqBody } = req;
-  console.log(index)  
+  console.log(index)
   console.log(reqBody)
   const {
     acc_name,
@@ -345,6 +345,7 @@ router.post("/login", (req, res, next) => {
               // 세션 저장
               req.session["login"] = resResult;
               req.session["logined"] = true;
+              res.setHeader('Access-Control-Allow-Credentials', 'true');
               req.session.save(() => {
                 console.log("sessionID-->", req.sessionID);
                 res.json(resData);
