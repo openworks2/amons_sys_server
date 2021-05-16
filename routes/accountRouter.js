@@ -11,15 +11,10 @@ const session = require("express-session");
 const MySQLStore = require("express-mysql-session");
 
 const pool = require("./config/connectionPool");
-// const indexCreateFn = require( "./lib/fillZero";
 const queryConfig = require("./config/query/configQuery");
 
 const dbconfig = require("./config/database");
-// const {
-//   deleteAction,
-//   getFindAll,
-//   getFindByField,
-// } = require( "./config/connectionUtile");
+
 const connectionUtile = require("./config/connectionUtile");
 const sessionStore = new MySQLStore(dbconfig);
 router.use(
@@ -30,7 +25,12 @@ router.use(
     store: sessionStore,
   })
 );
+
+const requestIp = require('request-ip');
+const useragent = require('express-useragent');
+
 router.use(cookieParser());
+router.use(useragent.express());
 
 // interface result {
 //   acc_id: number;
@@ -281,7 +281,7 @@ router.delete(
 // 로그인 (method: POST)
 router.post("/login", (req, res, next) => {
   const { body: reqBody } = req;
-  const { acc_user_id, acc_password } = reqBody;
+  const { acc_user_id, acc_password, screen } = reqBody;
   const _query = queryConfig.findByField(TB_ACCOUNT, "acc_user_id");
   pool.getConnection((err, connection) => {
     if (err) {
@@ -348,7 +348,21 @@ router.post("/login", (req, res, next) => {
               res.setHeader('Access-Control-Allow-Credentials', 'true');
               req.session.save(() => {
                 console.log("sessionID-->", req.sessionID);
+
+                console.log("client IP: " + requestIp.getClientIp(req));
+                console.log("client INFO: ", req.useragent)
+
                 res.json(resData);
+
+                /**로그인 로그 등록 */
+                const logData = {
+                  ip: requestIp.getClientIp(req),
+                  user_id: acc_user_id,
+                  os: req.useragent.os,
+                  browser: req.useragent.browser,
+                  screen: screen
+                }
+                loginLogHandler(logData)
               });
             } else {
               const resData = {
@@ -435,5 +449,53 @@ router.get("/check", (req, res) => {
     res.json(resObj);
   });
 });
+
+/**
+ * 
+ * @param {object} data
+ * @property {string} ip
+ * @property {string} user_id
+ * @property {string} os
+ * @property {string} browser
+ * @property {string} screen
+ */
+
+const loginLogHandler = (data) => {
+  const { ip, user_id, os, browser, screen } = data;
+  const logData = {
+    ll_logined_date: moment().format('YYYY-MM-DD HH:mm:ss.SSS'),
+    ll_ip: ip,
+    ll_user_id: user_id,
+    ll_os: os,
+    ll_browser: browser,
+    ll_screen: screen,
+  }
+
+  const _query = queryConfig.insert('log_login');
+
+  pool.getConnection((err, connection) => {
+    if (err) {
+      console.error("Pool getConnection Error");
+    } else {
+      connection.query(_query, logData, (err, results, field) => {
+        if (err) {
+          console.error("Connection Query Error");
+        } else {
+          console.log(results);
+        }
+      }
+      );
+    }
+    connection.release();
+  });
+
+}
+
+router.get('/main', function (req, res) {
+  console.log("client IP: " + requestIp.getClientIp(req));
+  console.log("client INFO: ", req.useragent)
+  res.json(req.useragent);
+})
+
 
 module.exports = router;
