@@ -498,4 +498,58 @@ router.get('/main', function (req, res) {
 })
 
 
+router.get("/login/record", async (req, res, next) => {
+  try {
+    await connectionUtile.getFindAll({
+      table: 'log_login',
+      req,
+      res,
+    })();
+  } catch (error) {
+    console.error(error);
+    res
+      .status(404)
+      .json({ status: 404, message: "CallBack Async Function Error" });
+  }
+});
+
+router.post("/login/record/search", (req, res, next) => {
+  // const _query = queryConfig.findByAllOrderBy(LOG_DIG, 'record_date', 'DESC');
+  const { body: reqBody } = req;
+  const { from_date, to_date } = reqBody;
+
+  // const fromDate = moment().subtract(1, 'months').format('YYYY-MM-DD 00:00:00'); //한단전
+  // const toDate = moment().format('YYYY-MM-DD HH:mm:ss');
+
+  const _query = `SELECT * FROM log_login 
+                WHERE DATE_FORMAT(ll_logined_date,"%Y-%m-%d %H:%i:%S") 
+                BETWEEN DATE_FORMAT("${from_date}","%Y-%m-%d %H:%i:%S")
+                AND DATE_FORMAT("${to_date}","%Y-%m-%d %H:%i:%S")
+                ORDER BY ll_logined_date DESC;`;
+  console.log(_query);
+
+  pool.getConnection((err, connection) => {
+    if (err) {
+      console.error(err);
+      res
+        .status(404)
+        .json({ status: 404, message: "Pool getConnection Error" });
+    } else {
+      connection.query(_query, (err, results, field) => {
+        if (err) {
+          console.error(err);
+          res
+            .status(404)
+            .json({ status: 404, message: "Connection Query Error" });
+        } else {
+
+
+          res.json(results);
+        }
+      });
+    }
+    connection.release();
+  });
+});
+
 module.exports = router;
