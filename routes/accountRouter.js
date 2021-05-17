@@ -516,7 +516,7 @@ router.get("/login/record", async (req, res, next) => {
 router.post("/login/record/search", (req, res, next) => {
   // const _query = queryConfig.findByAllOrderBy(LOG_DIG, 'record_date', 'DESC');
   const { body: reqBody } = req;
-  const { from_date, to_date } = reqBody;
+  const { from_date, to_date, ip } = reqBody;
 
   // const fromDate = moment().subtract(1, 'months').format('YYYY-MM-DD 00:00:00'); //한단전
   // const toDate = moment().format('YYYY-MM-DD HH:mm:ss');
@@ -525,6 +525,7 @@ router.post("/login/record/search", (req, res, next) => {
                 WHERE DATE_FORMAT(ll_logined_date,"%Y-%m-%d %H:%i:%S") 
                 BETWEEN DATE_FORMAT("${from_date}","%Y-%m-%d %H:%i:%S")
                 AND DATE_FORMAT("${to_date}","%Y-%m-%d %H:%i:%S")
+                ${ip !== null ? `AND ll_ip LIKE "%${ip}%"` : ``}
                 ORDER BY ll_logined_date DESC;`;
   console.log(_query);
 
