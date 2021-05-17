@@ -135,11 +135,15 @@ const weather = {
         //                 UPDATE ${_this.table} SET active=0 WHERE NOT code=${code};`;
         const _query_1 = `UPDATE ${_this.table} SET active=0 
                             WHERE active=1;`;
+        // const _query_2 = `UPDATE ${_this.table} SET active=1 
+        //                     WHERE sido LIKE "%${kma_sido}%" 
+        //                     AND gun LIKE "%${kma_gun}%"
+        //                     AND dong LIKE "%${kma_dong}%";`;
         const _query_2 = `UPDATE ${_this.table} SET active=1 
-                            WHERE sido LIKE "%${kma_sido}%" 
-                            AND gun LIKE "%${kma_gun}%"
-                            AND dong LIKE "%${kma_dong}%";`;
+                        WHERE sido LIKE "%${kma_sido}%" 
+                        AND gun LIKE "%${kma_gun}%";`;
 
+        console.log(_query_2)
         pool.getConnection((err, connection) => {
             if (err) {
                 console.error(err);
