@@ -69,8 +69,6 @@ router.post('/alarms/search', (req, res, next) => {
                             .status(404)
                             .json({ status: 404, message: "Connection Query Error" });
                     } else {
-                        searchList = results;
-                        searchBody = reqBody;
                         res.json(results);
                     }
                 }
@@ -118,18 +116,45 @@ router.put('/alarms/:index',
         }
     });
 
-let searchList;
-let searchBody;
 router.get('/alarms/download', function (req, res, next) {
 
-    const { local_index, from_date, to_date } = searchBody;
-    if (searchBody.length != 0) {
-        console.log(searchBody)
-        console.log(searchList)
-        const wb = excelDownHandler(searchList);
-        wb.write('알람이력:작업자(' + from_date + '_' + to_date + ').xlsx', res);
-    }
+    const { body: reqBody } = req;
+    const { local_index, from_date, to_date } = reqBody;
+    const _query = `SELECT * FROM ${LOG_ALARM_VIEW} 
+                    WHERE DATE_FORMAT(emg_start_time,"%Y-%m-%d %H:%i:%S") 
+                    BETWEEN DATE_FORMAT("${from_date}","%Y-%m-%d %H:%i:%S")
+                    AND DATE_FORMAT("${to_date}","%Y-%m-%d %H:%i:%S")
+                    ${local_index !== null ? `AND local_index="${local_index}"` : ``}
+                    ORDER BY emg_start_time DESC;`;
+                    console.log(_query)
+    pool.getConnection((err, connection) => {
+        if (err) {
+            console.error(err);
+            res
+                .status(404)
+                .json({ status: 404, message: "Pool getConnection Error" });
+        } else {
+            connection.query(
+                _query,
+                (err, results, field) => {
+                    if (err) {
+                        console.error(err);
+                        res
+                            .status(404)
+                            .json({ status: 404, message: "Connection Query Error" });
+                    } else {
+                        const wb = excelDownHandler(results);
+                        wb.write('알람이력조회(' + from_date + '_' + to_date + ').xlsx', res);
+
+                    }
+                }
+            );
+        }
+        connection.release();
+    });
 });
+
+
 
 const excelDownHandler = (data) => {
     let wb = new xl.Workbook();
