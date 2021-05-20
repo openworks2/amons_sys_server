@@ -166,7 +166,7 @@ router.put(
         wk_blood_type,
         wk_blood_group,
         wk_sms_yn,
-        wk_image: req.file ? req.file.filename : null,
+        wk_image: req.file ? req.file.filename : wk_image,
         co_index,
         bc_index,
       };
