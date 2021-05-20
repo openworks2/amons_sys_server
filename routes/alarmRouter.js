@@ -116,7 +116,7 @@ router.put('/alarms/:index',
         }
     });
 
-router.get('/alarms/download', function (req, res, next) {
+router.post('/alarms/download', function (req, res, next) {
 
     const { body: reqBody } = req;
     const { local_index, from_date, to_date } = reqBody;
@@ -251,7 +251,7 @@ const excelDownHandler = (data) => {
             }
             else if (j == 7) {
                 //작성자
-                const writer = data[i].emg_writer ? moment(data[i].emg_writer).format('YYYY-MM-DD HH:mm:ss') : '-';
+                const writer = data[i].emg_writer ? data[i].emg_writer: '-';
                 ws.cell(index, j).string(writer).style(style1);
             }
             else if (j == 8) {
