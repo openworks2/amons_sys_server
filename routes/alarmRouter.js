@@ -20,7 +20,7 @@ router.get(
     async (req, res, next) => {
         try {
             await connectionUtile.getFindAll({
-                table: LOG_ALARM_VIEW,
+                table: LOG_EMERGENCY,
                 req,
                 res,
             })();
@@ -45,7 +45,7 @@ router.post('/alarms/search', (req, res, next) => {
     const { body: reqBody } = req;
     const { local_index, from_date, to_date } = reqBody;
 
-    const _query = `SELECT * FROM ${LOG_ALARM_VIEW} 
+    const _query = `SELECT * FROM ${LOG_EMERGENCY} 
                     WHERE DATE_FORMAT(emg_start_time,"%Y-%m-%d %H:%i:%S") 
                     BETWEEN DATE_FORMAT("${from_date}","%Y-%m-%d %H:%i:%S")
                     AND DATE_FORMAT("${to_date}","%Y-%m-%d %H:%i:%S")
@@ -120,7 +120,7 @@ router.post('/alarms/download', function (req, res, next) {
 
     const { body: reqBody } = req;
     const { local_index, from_date, to_date } = reqBody;
-    const _query = `SELECT * FROM ${LOG_ALARM_VIEW} 
+    const _query = `SELECT * FROM ${LOG_EMERGENCY} 
                     WHERE DATE_FORMAT(emg_start_time,"%Y-%m-%d %H:%i:%S") 
                     BETWEEN DATE_FORMAT("${from_date}","%Y-%m-%d %H:%i:%S")
                     AND DATE_FORMAT("${to_date}","%Y-%m-%d %H:%i:%S")
