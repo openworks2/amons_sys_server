@@ -50,6 +50,7 @@
     "zero-fill": "^2.2.4"
   },
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "nodemon server.js",
+    "dist": "pm2 start server.js --name AMONS_SYS_SERVER(3000)"
   }
 }

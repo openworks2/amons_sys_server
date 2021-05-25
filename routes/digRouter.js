@@ -210,7 +210,7 @@ router.put(
 
     const data = {
       modified_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
-      record_date,
+      record_date: moment(record_date).format("YYYY-MM-DD HH:mm:ss.SSS"),
       dig_length,
       local_index,
       description

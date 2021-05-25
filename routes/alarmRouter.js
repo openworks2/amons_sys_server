@@ -144,7 +144,7 @@ router.post('/alarms/download', function (req, res, next) {
                             .json({ status: 404, message: "Connection Query Error" });
                     } else {
                         const wb = excelDownHandler(results);
-                        wb.write('알람이력조회(' + from_date + '_' + to_date + ').xlsx', res);
+                        wb.write('알람이력조회(' + from_date + '_' + to_date + ').xls', res);
 
                     }
                 }
@@ -228,20 +228,27 @@ const excelDownHandler = (data) => {
             else if (j == 4) {
                 // 나이
                 const birth = data[i].wk_birth;
-                const splitBirth = birth.split(".");
-                const Years =
-                    Number(splitBirth[0]) >= 30 ? splitBirth[0] : "20" + splitBirth[0];
-                const Months = splitBirth[1];
-                const Days = splitBirth[2];
-                const today = new Date();
-                const birthDate = new Date(Years, Months, Days); // 2000년 8월 10일
-
-                let age = `${today.getFullYear() - birthDate.getFullYear() + 1}세`;
+                console.log('birth--->',birth);
+                const splitBirth = birth ? birth.split(".") : null;
+                let age;
+                if(splitBirth){
+                    const Years =
+                        Number(splitBirth[0]) >= 30 ? splitBirth[0] : "20" + splitBirth[0];
+                    const Months = splitBirth[1];
+                    const Days = splitBirth[2];
+                    const today = new Date();
+                    const birthDate = new Date(Years, Months, Days); // 2000년 8월 10일
+    
+                    age = `${today.getFullYear() - birthDate.getFullYear() + 1}세`;
+                    
+                } else {
+                    age ='-'
+                }
                 ws.cell(index, j).string(age).style(style1);
             }
             else if (j == 5) {
                 // 핸드폰
-                const phone = data[i].wk_phone;
+                const phone = data[i].wk_phone
                 ws.cell(index, j).string(phone).style(style1);
             }
             else if (j == 6) {

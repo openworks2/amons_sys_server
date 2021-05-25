@@ -98,7 +98,7 @@ const weather = {
     },
     getLocation() {
         const _this = this;
-        const _query = `SELECT * FROM ${_this.table} WHERE active=1;`;
+        const _query = `SELECT * FROM ${_this.table} WHERE active=1 GROUP BY gun;`;
 
         pool.getConnection((err, connection) => {
             if (err) {

@@ -128,6 +128,7 @@ router.post(
       scn_ip,
       scn_port,
       local_index,
+      scn_description
     } = reqBody;
 
     const _scannerIndex = indexCreateFn("SCN");
@@ -143,6 +144,7 @@ router.post(
       scn_ip,
       scn_port,
       local_index,
+      scn_description
     };
 
     try {
@@ -179,6 +181,7 @@ router.put(
       scn_ip,
       scn_port,
       local_index,
+      scn_description
     } = reqBody;
 
     const data = {
@@ -193,6 +196,7 @@ router.put(
       scn_ip,
       scn_port,
       local_index,
+      scn_description
     };
 
     const updateData = [];

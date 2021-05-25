@@ -398,7 +398,7 @@ router.post('/bles/worker/download', (req, res, next) => {
                             .json({ status: 404, message: "Connection Query Error" });
                     } else {
                         const wb = workerExcelDownHandler(results);
-                        wb.write('잔류이력:작업자(' + from_date + '_' + to_date + ').xlsx', res);
+                        wb.write('잔류이력:작업자(' + from_date + '_' + to_date + ').xls', res);
 
                     }
                 }
@@ -449,7 +449,7 @@ router.post('/bles/worker/download', (req, res, next) => {
                             .json({ status: 404, message: "Connection Query Error" });
                     } else {
                         const wb = vehicleExcelDownHandler(results);
-                        wb.write('잔류이력:차량(' + from_date + '_' + to_date + ').xlsx', res);
+                        wb.write('잔류이력:차량(' + from_date + '_' + to_date + ').xls', res);
 
                     }
                 }
