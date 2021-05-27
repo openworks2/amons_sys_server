@@ -40,28 +40,30 @@ const weather = {
         _this.options.currentData = opt.currentData || _this.options.currentData;
         _this.options.baseTime = (() => {
             const curr = Number(moment().format('HH00'));
-            console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>curr-->', typeof curr)
             let _baseTime = '';
-            if (curr > 200 || curr <= 500) {
+            if (curr > 200 && curr <= 500) {
                 _baseTime = '0200'
             }
-            else if (curr > 800 || curr <= 1100) {
+            else if (curr > 800 && curr <= 1100) {
                 _baseTime = '0800'
             }
-            else if (curr > 1100 || curr <= 1400) {
+            else if (curr > 1100 && curr <= 1400) {
                 _baseTime = '1100'
             }
-            else if (curr > 1400 || curr <= 1700) {
+            else if (curr > 1400 && curr <= 1700) {
                 _baseTime = '1400'
             }
-            else if (curr > 1700 || curr <= 2000) {
+            else if (curr > 1700 && curr <= 2000) {
                 _baseTime = '1700'
             }
-            else if (curr > 1700 || curr <= 2000) {
+            else if (curr > 1700 && curr <= 2000) {
                 _baseTime = '1700'
             }
-            else if (curr > 2000 || curr <= 2300) {
+            else if (curr > 2000 && curr <= 2300) {
                 _baseTime = '2000'
+            } 
+            else {
+                _baseTime = '2300'
             }
             console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>curr-->', curr)
             console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>_baseTime-->', _baseTime)
@@ -84,7 +86,7 @@ const weather = {
         const ny = _this.options.ny;
         console.log('000-->', baseTime)
         const url = `${_this.address}?serviceKey=${apiKey}&numOfRows=${numOfRows}&pageNo=${pageNo}&dataType=${dataType}&base_date=${currentDate}&base_time=${baseTime}&nx=${nx}&ny=${ny}`;
-        // console.log(url)
+        console.log(url)
         request(url, (error, response, body) => {
             console.error('error:', error); // Print the error if one occurred
             const statusCode = response && response.statusCode;

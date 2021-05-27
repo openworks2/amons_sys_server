@@ -156,6 +156,9 @@ router.post(
         req,
         res,
       })();
+      setTimeout(() => {
+        scanStart()
+      }, 2000);
     } catch (error) {
       console.error(error);
       res
@@ -212,6 +215,9 @@ router.put(
         req,
         res,
       })();
+      setTimeout(() => {
+        scanStart()
+      }, 2000);
     } catch (error) {
       console.error(error);
       res
@@ -233,6 +239,9 @@ router.delete(
         req,
         res,
       })();
+      setTimeout(() => {
+        scanStart()
+      }, 2000);
     } catch (error) {
       console.error(error);
       res
