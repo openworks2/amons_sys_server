@@ -41,27 +41,30 @@ const weather = {
         _this.options.baseTime = (() => {
             const curr = Number(moment().format('HH00'));
             let _baseTime = '';
-            if (curr > 200 && curr <= 500) {
+            if (curr >= 200 && curr < 500) {
                 _baseTime = '0200'
             }
-            else if (curr > 800 && curr <= 1100) {
+            else if (curr >= 500 && curr < 800) {
+                _baseTime = '0500'
+            }
+            else if (curr >= 800 && curr < 1100) {
                 _baseTime = '0800'
             }
-            else if (curr > 1100 && curr <= 1400) {
+            else if (curr >= 1100 && curr < 1400) {
                 _baseTime = '1100'
             }
-            else if (curr > 1400 && curr <= 1700) {
+            else if (curr >= 1400 && curr < 1700) {
                 _baseTime = '1400'
             }
-            else if (curr > 1700 && curr <= 2000) {
+            else if (curr >= 1700 && curr < 2000) {
                 _baseTime = '1700'
             }
-            else if (curr > 1700 && curr <= 2000) {
+            else if (curr >= 1700 && curr < 2000) {
                 _baseTime = '1700'
             }
-            else if (curr > 2000 && curr <= 2300) {
+            else if (curr >= 2000 && curr < 2300) {
                 _baseTime = '2000'
-            } 
+            }
             else {
                 _baseTime = '2300'
             }
@@ -151,7 +154,7 @@ const weather = {
                 console.error(err);
 
             } else {
-                connection.query(_query_1+_query_2, (err, results, field) => {
+                connection.query(_query_1 + _query_2, (err, results, field) => {
                     if (err) {
                         console.error(err);
                     } else {
