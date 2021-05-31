@@ -355,13 +355,15 @@ router.post("/login", (req, res, next) => {
                 res.json(resData);
 
                 /**로그인 로그 등록 */
+                const reqIp = requestIp.getClientIp(req);
                 const logData = {
-                  ip: requestIp.getClientIp(req),
+                  ip: reqIp.indexOf('::ffff:') > -1 ? reqIp.split('::ffff:')[1] : reqIp,
                   user_id: acc_user_id,
                   os: req.useragent.os,
                   browser: req.useragent.browser,
                   screen: screen
                 }
+                console.log(logData)
                 loginLogHandler(logData)
               });
             } else {
