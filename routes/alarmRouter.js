@@ -44,12 +44,13 @@ router.get(
 router.post('/alarms/search', (req, res, next) => {
     const { body: reqBody } = req;
     const { local_index, from_date, to_date } = reqBody;
+    console.log(reqBody)
 
     const _query = `SELECT * FROM ${LOG_EMERGENCY} 
                     WHERE DATE_FORMAT(emg_start_time,"%Y-%m-%d %H:%i:%S") 
                     BETWEEN DATE_FORMAT("${from_date}","%Y-%m-%d %H:%i:%S")
                     AND DATE_FORMAT("${to_date}","%Y-%m-%d %H:%i:%S")
-                    ${local_index !== null ? `AND local_index="${local_index}"` : ``}
+                    ${local_index || local_index !== null ? `AND local_index="${local_index}"` : ``}
                     ORDER BY emg_start_time DESC;`;
     console.log(_query)
 
@@ -120,11 +121,12 @@ router.post('/alarms/download', function (req, res, next) {
 
     const { body: reqBody } = req;
     const { local_index, from_date, to_date } = reqBody;
+    console.log(reqBody)
     const _query = `SELECT * FROM ${LOG_EMERGENCY} 
                     WHERE DATE_FORMAT(emg_start_time,"%Y-%m-%d %H:%i:%S") 
                     BETWEEN DATE_FORMAT("${from_date}","%Y-%m-%d %H:%i:%S")
                     AND DATE_FORMAT("${to_date}","%Y-%m-%d %H:%i:%S")
-                    ${local_index !== null ? `AND local_index="${local_index}"` : ``}
+                    ${local_index ? `AND local_index="${local_index}"` : ``}
                     ORDER BY emg_start_time DESC;`;
                     console.log(_query)
     pool.getConnection((err, connection) => {
@@ -228,8 +230,7 @@ const excelDownHandler = (data) => {
             else if (j == 4) {
                 // 나이
                 const birth = data[i].wk_birth;
-                console.log('birth--->',birth);
-                const splitBirth = birth ? birth.split(".") : null;
+                const splitBirth = birth ? birth.split("-") : null;
                 let age;
                 if(splitBirth){
                     const Years =

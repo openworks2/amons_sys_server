@@ -90,21 +90,21 @@ router.get(
  * @property {string} local_index 노선 인덱스
  * @property {string} from_date
  * @property {string} to_date
- * @property {string} wk_name 작업자 이름
- * @property {string} wk_co_index 작업자 소속사
+ * @property {string} name 작업자 이름
+ * @property {string}  co_index 작업자 소속사
  */
 router.post(
     "/bles/worker/search", (req, res, next) => {
         const { body: reqBody } = req;
-        const { local_index = null, from_date, to_date, wk_name = null, wk_co_index = null } = reqBody;
-
+        const { local_index = null, from_date, to_date, name = null, co_index = null } = reqBody;
+        
         const _query = `SELECT * FROM ${LOG_BLE_WORKER} 
                         WHERE DATE_FORMAT(ble_input_time,"%Y-%m-%d %H:%i:%S") 
                         BETWEEN DATE_FORMAT("${from_date}","%Y-%m-%d %H:%i:%S")
                         AND DATE_FORMAT("${to_date}","%Y-%m-%d %H:%i:%S")
                         ${local_index !== null ? `AND local_index='${local_index}'` : ``}
-                        ${wk_name !== null ? `AND wk_name LIKE '%${wk_name}%'` : ``}
-                        ${wk_co_index !== null ? `AND wk_co_index = "${wk_co_index}"` : ``}
+                        ${name !== null ? `AND name LIKE '%${name}%'` : ``}
+                        ${co_index !== null ? `AND co_index = "${co_index}"` : ``}
                         ORDER BY ble_input_time DESC;`;
         console.log(_query)
         pool.getConnection((err, connection) => {
@@ -138,21 +138,21 @@ router.post(
  * @property {string} local_index 노선 인덱스
  * @property {string} from_date 
  * @property {string} to_date
- * @property {string} vh_name 차량 이름
- * @property {string} vh_co_index 차량 소속사
+ * @property {string} name 차량 이름
+ * @property {string} co_index 차량 소속사
  */
 router.post(
     "/bles/vehicle/search", (req, res, next) => {
         const { body: reqBody } = req;
-        const { local_index = null, from_date, to_date, vh_name = null, vh_co_index = null } = reqBody;
+        const { local_index = null, from_date, to_date, name = null, co_index = null } = reqBody;
 
         const _query = `SELECT * FROM ${LOG_BLE_VEHICLE} 
                         WHERE DATE_FORMAT(ble_input_time,"%Y-%m-%d %H:%i:%S") 
                         BETWEEN DATE_FORMAT("${from_date}","%Y-%m-%d %H:%i:%S")
                         AND DATE_FORMAT("${to_date}","%Y-%m-%d %H:%i:%S")
                         ${local_index !== null ? `AND local_index='${local_index}'` : ``}
-                        ${vh_name !== null ? `AND vh_name LIKE '%${vh_name}%'` : ``}
-                        ${vh_co_index !== null ? `AND vh_co_index = "${vh_co_index}"` : ``}
+                        ${name !== null ? `AND name LIKE '%${name}%'` : ``}
+                        ${co_index !== null ? `AND co_index = "${co_index}"` : ``}
                         ORDER BY ble_input_time DESC;`;
         console.log(_query)
         pool.getConnection((err, connection) => {
@@ -222,22 +222,22 @@ router.get("/bles/input/:type", (req, res, next) => {
  * @property {string} local_index 노선 인덱스
  * @property {string} from_date
  * @property {string} to_date
- * @property {string} wk_name 작업자 이름
- * @property {string} wk_co_index 작업자 소속사
+ * @property {string} name 작업자 이름
+ * @property {string}  co_index 작업자 소속사
  */
 router.post('/bles/input/worker/search', (req, res, next) => {
 
     const { body: reqBody } = req;
-    const { local_index = null, from_date, to_date, wk_name = null, wk_co_index = null } = reqBody;
-
-    const _query = `SELECT * FROM ble_input_beacon_view
-                    WHERE DATE_FORMAT(bc_input_time,"%Y-%m-%d %H:%i:%S") 
+    const { local_index = null, from_date, to_date, name = null, co_index = null } = reqBody;
+        
+    const _query = `SELECT * FROM ${LOG_BLE_WORKER} 
+                    WHERE DATE_FORMAT(ble_input_time,"%Y-%m-%d %H:%i:%S") 
                     BETWEEN DATE_FORMAT("${from_date}","%Y-%m-%d %H:%i:%S")
                     AND DATE_FORMAT("${to_date}","%Y-%m-%d %H:%i:%S")
                     ${local_index !== null ? `AND local_index='${local_index}'` : ``}
-                    ${wk_co_index !== null ? `AND wk_co_index = "${wk_co_index}"` : ``}
-                    ${wk_name !== null ? `AND wk_name LIKE '%${wk_name}%'` : ``}
-                    ORDER BY bc_input_time DESC;`;
+                    ${name !== null ? `AND name LIKE '%${name}%'` : ``}
+                    ${co_index !== null ? `AND co_index = "${co_index}"` : ``}
+                    ORDER BY ble_input_time DESC;`;
     console.log(_query)
     pool.getConnection((err, connection) => {
         if (err) {
@@ -272,21 +272,21 @@ router.post('/bles/input/worker/search', (req, res, next) => {
  * @property {string} local_index 노선 인덱스
  * @property {string} from_date
  * @property {string} to_date
- * @property {string} vh_name 작업자 이름
- * @property {string} vh_co_index 작업자 소속사
+ * @property {string} name 작업자 이름
+ * @property {string} co_index 작업자 소속사
  */
 router.post('/bles/input/vehicle/search', (req, res, next) => {
 
     const { body: reqBody } = req;
-    const { local_index = null, from_date, to_date, vh_name = null, vh_co_index = null } = reqBody;
+    const { local_index = null, from_date, to_date, name = null, co_index = null } = reqBody;
 
     const _query = `SELECT * FROM ble_input_beacon_view
                     WHERE DATE_FORMAT(bc_input_time,"%Y-%m-%d %H:%i:%S") 
                     BETWEEN DATE_FORMAT("${from_date}","%Y-%m-%d %H:%i:%S")
                     AND DATE_FORMAT("${to_date}","%Y-%m-%d %H:%i:%S")
                     ${local_index !== null ? `AND local_index='${local_index}'` : ``}
-                    ${vh_co_index !== null ? `AND vh_co_index = "${vh_co_index}"` : ``}
-                    ${vh_name !== null ? `AND vh_name LIKE '%${vh_name}%'` : ``}
+                    ${co_index !== null ? `AND co_index = "${co_index}"` : ``}
+                    ${name !== null ? `AND name LIKE '%${name}%'` : ``}
                     ORDER BY bc_input_time DESC;`;
     console.log(_query)
     pool.getConnection((err, connection) => {
@@ -364,21 +364,21 @@ router.post('/bles/input/vehicle/search', (req, res, next) => {
  * @property {string} local_index 노선 인덱스
  * @property {string} from_date
  * @property {string} to_date
- * @property {string} wk_name 작업자 이름
- * @property {string} wk_co_index 작업자 소속사
+ * @property {string} name 작업자 이름
+ * @property {string} co_index 작업자 소속사
  */
 router.post('/bles/worker/download', (req, res, next) => {
 
     const { body: reqBody } = req;
-    const { local_index = null, from_date, to_date, wk_name = null, wk_co_index = null } = reqBody;
+    const { local_index = null, from_date, to_date, name = null, co_index = null } = reqBody;
 
     const _query = `SELECT * FROM ${LOG_BLE_WORKER} 
                     WHERE DATE_FORMAT(ble_input_time,"%Y-%m-%d %H:%i:%S") 
                     BETWEEN DATE_FORMAT("${from_date}","%Y-%m-%d %H:%i:%S")
                     AND DATE_FORMAT("${to_date}","%Y-%m-%d %H:%i:%S")
                     ${local_index !== null ? `AND local_index='${local_index}'` : ``}
-                    ${wk_name !== null ? `AND wk_name LIKE '%${wk_name}%'` : ``}
-                    ${wk_co_index !== null ? `AND wk_co_index = "${wk_co_index}"` : ``}
+                    ${name !== null ? `AND name LIKE '%${name}%'` : ``}
+                    ${co_index !== null ? `AND co_index = "${co_index}"` : ``}
                     ORDER BY ble_input_time DESC;`;
     console.log(_query)
     pool.getConnection((err, connection) => {
@@ -415,21 +415,21 @@ router.post('/bles/worker/download', (req, res, next) => {
  * @property {string} local_index 노선 인덱스
  * @property {string} from_date
  * @property {string} to_date
- * @property {string} wk_name 작업자 이름
- * @property {string} wk_co_index 작업자 소속사
+ * @property {string} name 작업자 이름
+ * @property {string} co_index 작업자 소속사
  */
  router.post('/bles/vehicle/download', (req, res, next) => {
 
     const { body: reqBody } = req;
-    const { local_index = null, from_date, to_date, vh_name = null, vh_co_index = null } = reqBody;
+    const { local_index = null, from_date, to_date, name = null, co_index = null } = reqBody;
 
     const _query = `SELECT * FROM ${LOG_BLE_VEHICLE} 
                     WHERE DATE_FORMAT(ble_input_time,"%Y-%m-%d %H:%i:%S") 
                     BETWEEN DATE_FORMAT("${from_date}","%Y-%m-%d %H:%i:%S")
                     AND DATE_FORMAT("${to_date}","%Y-%m-%d %H:%i:%S")
                     ${local_index !== null ? `AND local_index='${local_index}'` : ``}
-                    ${vh_name !== null ? `AND vh_name LIKE '%${vh_name}%'` : ``}
-                    ${vh_co_index !== null ? `AND vh_co_index = "${vh_co_index}"` : ``}
+                    ${name !== null ? `AND name LIKE '%${name}%'` : ``}
+                    ${co_index !== null ? `AND co_index = "${co_index}"` : ``}
                     ORDER BY ble_input_time DESC;`;
     console.log(_query)
     pool.getConnection((err, connection) => {
@@ -519,23 +519,23 @@ const workerExcelDownHandler = (data) => {
             }
             else if (j == 2) {
                 // 이름
-                const workerName = data[i].wk_name;
+                const workerName = data[i].name;
                 ws.cell(index, j).string(workerName).style(style1);
             }
             else if (j == 3) {
                 // 소속사
-                const company = data[i].wk_co_name;
+                const company = data[i].name;
                 ws.cell(index, j).string(company).style(style1);
             }
             else if (j == 4) {
                 // 직위
-                let position = data[i].wk_position;
+                let position = data[i].position;
                 // let age = `${today.getFullYear() - birthDate.getFullYear() + 1}세`;
                 ws.cell(index, j).string(position).style(style1);
             }
             else if (j == 5) {
                 // 국적
-                const nation = data[i].wk_nation;
+                const nation = data[i].nation;
                 ws.cell(index, j).string(nation).style(style1);
             }
             else if (j == 6) {
@@ -625,17 +625,17 @@ const vehicleExcelDownHandler = (data) => {
             }
             else if (j == 2) {
                 // 소속사
-                const compaynName = data[i].vh_co_name;
+                const compaynName = data[i].co_name;
                 ws.cell(index, j).string(compaynName).style(style1);
             }
             else if (j == 3) {
                 // 차량종류
-                const name = data[i].vh_name;
+                const name = data[i].name;
                 ws.cell(index, j).string(name).style(style1);
             }
             else if (j == 4) {
                 // 차량번호
-                const number = data[i].vh_number;
+                const number = data[i].number;
                 ws.cell(index, j).string(number).style(style1);
             }
             else if (j == 5) {

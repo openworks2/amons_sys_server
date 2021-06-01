@@ -51,6 +51,6 @@
   },
   "scripts": {
     "start": "nodemon server.js",
-    "dist": "pm2 start server.js --name AMONS_SYS_SERVER(3000)"
+    "dist": "pm2 start server.js --name HANWHA_API_SERVER(8085)"
   }
 }

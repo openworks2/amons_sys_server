@@ -8,7 +8,7 @@ const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser');
 const logger = require('morgan');
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8085;
 var http = require("http").createServer(app);  //모듈사용
 
 app.use(express.json());
