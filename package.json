@@ -51,6 +51,6 @@
   },
   "scripts": {
     "start": "nodemon server.js",
-    "dist": "pm2 start server.js --name HANWHA_API_SERVER(8085)"
+    "dist": "pm2 start server.js --name HANWHA_API_SERVER(8085) --log-date-format \"YYYY-MM-DD HH:mm:ss\""
   }
 }
