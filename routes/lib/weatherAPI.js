@@ -59,9 +59,6 @@ const weather = {
             else if (curr >= 1700 && curr < 2000) {
                 _baseTime = '1700'
             }
-            else if (curr >= 1700 && curr < 2000) {
-                _baseTime = '1700'
-            }
             else if (curr >= 2000 && curr < 2300) {
                 _baseTime = '2000'
             }
@@ -96,7 +93,7 @@ const weather = {
             if (error) {
             } else {
                 const _body = JSON.parse(body);
-                console.log(_body);
+                console.log( _body.response.body);
                 _this.body = _body.response.body ? _body.response.body.items.item : _body;
             }
         });
