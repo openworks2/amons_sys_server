@@ -69,8 +69,8 @@ const weather = {
             console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>_baseTime-->', _baseTime)
             return _baseTime
         })();
-        _this.options.nx = _this.location.local_x || _this.options.nx;
-        _this.options.ny = _this.location.local_y || _this.options.ny;
+        // _this.options.nx = _this.location.local_x || _this.options.nx;
+        // _this.options.ny = _this.location.local_y || _this.options.ny;
         _this.getLocation();
         _this.scheduleAction();
     },
@@ -82,8 +82,8 @@ const weather = {
         const dataType = _this.options.dataType;
         const currentDate = _this.options.currentData;
         // const baseTime = _this.options.baseTime;
-        const nx = _this.options.nx;
-        const ny = _this.options.ny;
+        const nx = _this.location.local_x || 62;
+        const ny = _this.location.local_y || 128;
         const baseTime = (() => {
             const curr = Number(moment().format('HHmm'));
             let _baseTime = '';
@@ -189,7 +189,7 @@ const weather = {
                             local_x,
                             local_y
                         }
-                        console.log('>>>>>>>>>>>>>>>>', _this.location)
+                       
                         _this.requestHandler();
                     }
                 });
