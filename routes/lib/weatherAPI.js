@@ -114,12 +114,16 @@ const weather = {
         })();
 
         const url = `${_this.address}?serviceKey=${apiKey}&numOfRows=${numOfRows}&pageNo=${pageNo}&dataType=${dataType}&base_date=${currentDate}&base_time=${baseTime}&nx=${nx}&ny=${ny}`;
+        console.log('url-->',url)
         request(url, (error, response, body) => {
             console.error('error:', error); // Print the error if one occurred
             const statusCode = response && response.statusCode;
+            console.error('statusCode:', statusCode);
             if (error) {
+                console.error('error:', error);            
             } else {
                 const _body = JSON.parse(body);
+                console.log(_body)
                 _this.body = _body.response.body ? _body.response.body.items.item : _body;
                 if(_this.body && _this.body.length !== 0){
                     const initialValue = {}
