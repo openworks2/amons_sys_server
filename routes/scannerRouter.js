@@ -32,7 +32,6 @@ const scanStart = () => {
         if (err) {
           console.error(err);
         } else {
-          console.log(results);
           portScanner.init(results);
         }
       });

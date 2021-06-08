@@ -118,8 +118,6 @@ const connectionUtile = {
                   ...insertData,
                   [key]: results.insertId,
                 };
-                console.log('resObj=>', resObj)
-
                 res.json(resObj);
               }
             }
@@ -159,7 +157,6 @@ const connectionUtile = {
                   ...body,
                   ...updateData[0],
                 };
-                console.log('put resObj=>', resObj)
                 res.json(resObj);
               }
             }

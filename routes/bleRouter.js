@@ -106,7 +106,6 @@ router.post(
                         ${name !== null ? `AND name LIKE '%${name}%'` : ``}
                         ${co_index !== null ? `AND co_index = "${co_index}"` : ``}
                         ORDER BY ble_input_time DESC;`;
-        console.log(_query)
         pool.getConnection((err, connection) => {
             if (err) {
                 console.error(err);
@@ -154,7 +153,6 @@ router.post(
                         ${name !== null ? `AND name LIKE '%${name}%'` : ``}
                         ${co_index !== null ? `AND co_index = "${co_index}"` : ``}
                         ORDER BY ble_input_time DESC;`;
-        console.log(_query)
         pool.getConnection((err, connection) => {
             if (err) {
                 console.error(err);
@@ -205,8 +203,6 @@ router.get("/bles/input/:type", (req, res, next) => {
                         .status(404)
                         .json({ status: 404, message: "Connection Query Error" });
                 } else {
-                    // console.log(test);
-
                     res.json(results);
                 }
             });
@@ -238,7 +234,6 @@ router.post('/bles/input/worker/search', (req, res, next) => {
                     ${name !== null ? `AND name LIKE '%${name}%'` : ``}
                     ${co_index !== null ? `AND co_index = "${co_index}"` : ``}
                     ORDER BY ble_input_time DESC;`;
-    console.log(_query)
     pool.getConnection((err, connection) => {
         if (err) {
             console.error(err);
@@ -288,7 +283,6 @@ router.post('/bles/input/vehicle/search', (req, res, next) => {
                     ${co_index !== null ? `AND co_index = "${co_index}"` : ``}
                     ${name !== null ? `AND name LIKE '%${name}%'` : ``}
                     ORDER BY bc_input_time DESC;`;
-    console.log(_query)
     pool.getConnection((err, connection) => {
         if (err) {
             console.error(err);
@@ -380,7 +374,6 @@ router.post('/bles/worker/download', (req, res, next) => {
                     ${name !== null ? `AND name LIKE '%${name}%'` : ``}
                     ${co_index !== null ? `AND co_index = "${co_index}"` : ``}
                     ORDER BY ble_input_time DESC;`;
-    console.log(_query)
     pool.getConnection((err, connection) => {
         if (err) {
             console.error(err);
@@ -431,7 +424,6 @@ router.post('/bles/worker/download', (req, res, next) => {
                     ${name !== null ? `AND name LIKE '%${name}%'` : ``}
                     ${co_index !== null ? `AND co_index = "${co_index}"` : ``}
                     ORDER BY ble_input_time DESC;`;
-    console.log(_query)
     pool.getConnection((err, connection) => {
         if (err) {
             console.error(err);

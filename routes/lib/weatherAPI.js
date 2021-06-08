@@ -65,8 +65,7 @@ const weather = {
             else {
                 _baseTime = '2300'
             }
-            console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>curr-->', curr)
-            console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>_baseTime-->', _baseTime)
+
             return _baseTime
         })();
         // _this.options.nx = _this.location.local_x || _this.options.nx;
@@ -111,14 +110,10 @@ const weather = {
             else {
                 _baseTime = '2300'
             }
-            console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>curr-->', curr)
-            console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>_baseTime-->', _baseTime)
             return _baseTime
         })();
-        console.log('000-->', baseTime)
 
         const url = `${_this.address}?serviceKey=${apiKey}&numOfRows=${numOfRows}&pageNo=${pageNo}&dataType=${dataType}&base_date=${currentDate}&base_time=${baseTime}&nx=${nx}&ny=${ny}`;
-        console.log(url)
         request(url, (error, response, body) => {
             console.error('error:', error); // Print the error if one occurred
             const statusCode = response && response.statusCode;
@@ -179,7 +174,6 @@ const weather = {
                     if (err) {
                         console.error(err);
                     } else {
-                        // console.log('results->', results)
                         const { code, sido, gun, dong, local_x, local_y } = results[0]
                         _this.location = {
                             code,
@@ -222,7 +216,6 @@ const weather = {
                     if (err) {
                         console.error(err);
                     } else {
-                        // console.log('results->', results)
 
                         _this.getLocation();
 
@@ -239,9 +232,7 @@ const weather = {
         }
         _this.job = schedule.scheduleJob('0 0 */3 * * *', () => {
             _this.requestHandler();
-            console.log('hi!')
         })
-        // console.log(_this.job)
     },
 }
 module.exports = weather;

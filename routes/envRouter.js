@@ -30,7 +30,6 @@ router.put(
         const { index } = req.params;
         const { body: reqBody } = req;
         const { announce_rolling, process_disabled, kma_sido, kma_gun, kma_dong } = reqBody;
-        console.log(reqBody)
         const data = {
             announce_rolling,
             process_disabled,

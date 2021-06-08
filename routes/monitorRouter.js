@@ -98,7 +98,6 @@ router.get("/beacons", (req, res, next) => {
 //           if (err) {
 
 //           } else {
-//             console.log(req.app.get('io'));
 //             res.json(results);
 //             const io = req.app.get('io');
 //             // io.emit('project', 'project emit');

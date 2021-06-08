@@ -102,7 +102,6 @@ router.put(
     const { index } = req.params;
     const { body: reqBody } = req;
     const { local_id, local_index, local_name, plan_length, local_description, local_used } = reqBody;
-    console.log(reqBody)
     const data = {
       modified_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
       local_id,

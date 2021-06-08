@@ -62,7 +62,6 @@ router.post(
   "/companies",
   async (req, res, next) => {
     const { body: reqBody } = req;
-    console.log(req.body);
     const { co_name, co_sectors, description } = reqBody;
     const _companyIndex = indexCreateFn("CO");
 

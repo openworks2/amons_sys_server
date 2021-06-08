@@ -63,14 +63,8 @@ router.post(
       } else if (err) {
         return next(err);
       }
-      // console.log('원본파일명 : ' + req.file.originalname)
-      // console.log('저장파일명 : ' + req.file.filename)
-      // console.log('크기 : ' + req.file.size)
-      console.log(req);
-      console.log(req.body.reqBody);
-      console.log(JSON.parse(req.body.reqBody));
+
       const reqBody = JSON.parse(req.body.reqBody);
-      console.log('reqBody-->', reqBody)
       const {
         vh_name,
         vh_number,
@@ -111,7 +105,6 @@ router.post(
           .status(404)
           .json({ status: 404, message: "CallBack Async Function Error" });
       }
-      // console.log('경로 : ' + req.file.location) s3 업로드시 업로드 url을 가져옴
     });
   }
 );
@@ -125,13 +118,8 @@ router.put(
       } else if (err) {
         return next(err);
       }
-      // console.log('원본파일명 : ' + req.file.originalname)
-      // console.log('저장파일명 : ' + req.file.filename)
-      // console.log('크기 : ' + req.file.size)
-      console.log(req.body);
-      console.log(JSON.parse(req.body.reqBody));
+
       const reqBody = JSON.parse(req.body.reqBody);
-      console.log('reqBody-->', reqBody);
       const { index } = req.params;
       const {
         vh_id,

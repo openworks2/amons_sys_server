@@ -101,7 +101,6 @@ router.put(
       local_index,
       pcs_description
     };
-    console.log("update-->", data);
     const updateData = [];
     updateData[0] = data;
     updateData[1] = index;

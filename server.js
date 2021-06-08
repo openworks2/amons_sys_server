@@ -95,7 +95,6 @@ io.on("connection", function (socket) {
 
   let intervalId=undefined;
   socket.on("getData", (data) => {
-    console.log("data-->>>", data);
     if (!intervalId) {
       intervalId = setInterval(function () {
         // console.log('>>>socket interval!!!')
@@ -106,18 +105,17 @@ io.on("connection", function (socket) {
         });
       }, 5000);
     } else {
-      console.log('--->',intervalId)
     }
   });
 
   socket.on("roomjoin", (userid) => {  //roomjoin 이벤트명으로 데이터받기 //socket.on
-    console.log(userid);
+    // console.log(userid);
     // socket.join(userid);  
   });
   // socket.emit('receive', '성공하자!!!!!!!')             //userid로 방 만들기
 
   socket.on("alert", (touserid) => {  //alet 이벤트로 데이터 받기 
-    console.log(touserid)
+    // console.log(touserid)
     io.to(touserid).emit("heejewake", touserid);  //touserid: 클라이언트1이 보낸데이터"hwi"
   });                                             //heejewake이벤트: hwi 에게 메시지 hwi를 보낸다
 });

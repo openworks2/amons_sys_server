@@ -101,7 +101,6 @@ router.get(
 // 계정 등록 (method: POST)
 router.post("/accounts", (req, res, next) => {
   const { body: reqBody } = req;
-  // console.log(req.body);
   const {
     acc_name,
     acc_user_id,
@@ -114,12 +113,10 @@ router.post("/accounts", (req, res, next) => {
   } = reqBody;
 
   const hashDigest = CryptoJS.SHA256(acc_password).toString();
-  console.log("hashDigest-->", hashDigest);
   var salt = CryptoJS.lib.WordArray.random(128 / 8);
   const key128Bits = CryptoJS.PBKDF2("Secret Passphrase", salt, {
     keySize: 128 / 32,
   }).toString();
-  console.log("key128Bits->>", key128Bits);
   const InsertData = {
     created_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
     acc_name,
@@ -175,8 +172,6 @@ router.post("/accounts", (req, res, next) => {
 router.put('/accounts/:index', (req, res, next) => {
   const { index } = req.params;
   const { body: reqBody } = req;
-  console.log(index)
-  console.log(reqBody)
   const {
     acc_name,
     acc_user_id,
@@ -189,12 +184,10 @@ router.put('/accounts/:index', (req, res, next) => {
   } = reqBody;
 
   const hashDigest = CryptoJS.SHA256(acc_password).toString();
-  console.log("hashDigest-->", hashDigest);
   var salt = CryptoJS.lib.WordArray.random(128 / 8);
   const key128Bits = CryptoJS.PBKDF2("Secret Passphrase", salt, {
     keySize: 128 / 32,
   }).toString();
-  console.log("key128Bits->>", key128Bits);
 
   const data = {
     modified_date: moment().format("YYYY-MM-DD HH:mm:ss.SSS"),
@@ -347,10 +340,6 @@ router.post("/login", (req, res, next) => {
               req.session["logined"] = true;
               res.setHeader('Access-Control-Allow-Credentials', 'true');
               req.session.save(() => {
-                console.log("sessionID-->", req.sessionID);
-
-                console.log("client IP: " + requestIp.getClientIp(req));
-                console.log("client INFO: ", req.useragent)
 
                 res.json(resData);
 
@@ -363,7 +352,6 @@ router.post("/login", (req, res, next) => {
                   browser: req.useragent.browser,
                   screen: screen
                 }
-                console.log(logData)
                 loginLogHandler(logData)
               });
             } else {
@@ -385,8 +373,6 @@ router.post("/login", (req, res, next) => {
 });
 // 로그아웃 (method: GET)
 router.get("/logout", (req, res, next) => {
-  console.log("req.sessionID");
-  console.log(req.sessionID);
   req.session.destroy(() => {
     // delete loginedUser['12345678'];
     const resData = {
@@ -429,7 +415,6 @@ router.post(
               const resData = {
                 auth: count === 0 ? true : false, // auth=true->uniNumber 사용 가능
               };
-              console.log(resData);
               res.json(resData);
             }
           }
@@ -443,7 +428,6 @@ router.post(
 // 로그인 체크
 router.get("/check", (req, res) => {
   sessionStore.get(req.sessionID, (error, session) => {
-    console.log("session->", session);
     const resObj = {
       validated: req.session.hasOwnProperty("login") ? true : false,
     };
@@ -483,7 +467,6 @@ const loginLogHandler = (data) => {
         if (err) {
           console.error("Connection Query Error");
         } else {
-          console.log(results);
         }
       }
       );
@@ -494,8 +477,6 @@ const loginLogHandler = (data) => {
 }
 
 router.get('/main', function (req, res) {
-  console.log("client IP: " + requestIp.getClientIp(req));
-  console.log("client INFO: ", req.useragent)
   res.json(req.useragent);
 })
 
@@ -529,7 +510,6 @@ router.post("/login/record/search", (req, res, next) => {
                 AND DATE_FORMAT("${to_date}","%Y-%m-%d %H:%i:%S")
                 ${ip !== null ? `AND ll_ip LIKE "%${ip}%"` : ``}
                 ORDER BY ll_logined_date DESC;`;
-  console.log(_query);
 
   pool.getConnection((err, connection) => {
     if (err) {

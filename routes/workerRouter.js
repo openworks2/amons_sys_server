@@ -58,14 +58,8 @@ router.post(
       } else if (err) {
         return next(err);
       }
-      // console.log('원본파일명 : ' + req.file.originalname)
-      // console.log('저장파일명 : ' + req.file.filename)
-      // console.log('크기 : ' + req.file.size)
-      console.log(req);
-      console.log(req.body.reqBody);
-      console.log(JSON.parse(req.body.reqBody));
+
       const reqBody = JSON.parse(req.body.reqBody);
-      console.log('reqBody-->', reqBody)
       const {
         wk_name,
         wk_phone,
@@ -126,14 +120,9 @@ router.put(
       } else if (err) {
         return next(err);
       }
-      // console.log('원본파일명 : ' + req.file.originalname)
-      // console.log('저장파일명 : ' + req.file.filename)
-      // console.log('크기 : ' + req.file.size)
-      console.log(req);
-      console.log(req.body.reqBody);
-      console.log(JSON.parse(req.body.reqBody));
+
+
       const reqBody = JSON.parse(req.body.reqBody);
-      console.log('reqBody-->', reqBody)
       const { index } = req.params;
       const {
         wk_id,
@@ -170,7 +159,6 @@ router.put(
         co_index,
         bc_index,
       };
-      console.log('data--->',data);
       const updateData = [];
       updateData[0] = data;
       updateData[1] = index;

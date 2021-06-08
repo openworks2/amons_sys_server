@@ -56,7 +56,6 @@ router.post(
   "/announces",
   async (req, res, next) => {
     const { body: reqBody } = req;
-    console.log(req.body);
     const { ann_title, ann_contents, ann_writer, ann_preview } = reqBody;
 
     const insertData = {

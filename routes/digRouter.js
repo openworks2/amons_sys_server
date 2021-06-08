@@ -109,8 +109,6 @@ router.get("/digs/local", (req, res, next) => {
             .json({ status: 404, message: "Connection Query Error" });
         } else {
           const responseData = convertArrayToObject(results, 'local_index');
-          // console.log(test);
-
           res.json(responseData);
         }
       });
