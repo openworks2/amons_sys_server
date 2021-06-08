@@ -39,27 +39,27 @@ const weather = {
         _this.options.dataType = opt.dataType || _this.options.dataType;
         _this.options.currentData = opt.currentData || _this.options.currentData;
         _this.options.baseTime = (() => {
-            const curr = Number(moment().format('HH00'));
+            const curr = Number(moment().format('HHmm'));
             let _baseTime = '';
-            if (curr >= 200 && curr < 500) {
+            if (curr >= 210 && curr < 510) {
                 _baseTime = '0200'
             }
-            else if (curr >= 500 && curr < 800) {
+            else if (curr >= 510 && curr < 810) {
                 _baseTime = '0500'
             }
-            else if (curr >= 800 && curr < 1100) {
+            else if (curr >= 810 && curr < 1110) {
                 _baseTime = '0800'
             }
-            else if (curr >= 1100 && curr < 1400) {
+            else if (curr >= 1110 && curr < 1410) {
                 _baseTime = '1100'
             }
-            else if (curr >= 1400 && curr < 1700) {
+            else if (curr >= 1410 && curr < 1710) {
                 _baseTime = '1400'
             }
-            else if (curr >= 1700 && curr < 2000) {
+            else if (curr >= 1710 && curr < 2010) {
                 _baseTime = '1700'
             }
-            else if (curr >= 2000 && curr < 2300) {
+            else if (curr >= 2010 && curr < 2310) {
                 _baseTime = '2000'
             }
             else {
@@ -81,10 +81,42 @@ const weather = {
         const pageNo = _this.options.pageNo;
         const dataType = _this.options.dataType;
         const currentDate = _this.options.currentData;
-        const baseTime = _this.options.baseTime;
+        // const baseTime = _this.options.baseTime;
         const nx = _this.options.nx;
         const ny = _this.options.ny;
+        const baseTime = (() => {
+            const curr = Number(moment().format('HHmm'));
+            let _baseTime = '';
+            if (curr >= 210 && curr < 510) {
+                _baseTime = '0200'
+            }
+            else if (curr >= 510 && curr < 810) {
+                _baseTime = '0500'
+            }
+            else if (curr >= 810 && curr < 1110) {
+                _baseTime = '0800'
+            }
+            else if (curr >= 1110 && curr < 1410) {
+                _baseTime = '1100'
+            }
+            else if (curr >= 1410 && curr < 1710) {
+                _baseTime = '1400'
+            }
+            else if (curr >= 1710 && curr < 2010) {
+                _baseTime = '1700'
+            }
+            else if (curr >= 2010 && curr < 2310) {
+                _baseTime = '2000'
+            }
+            else {
+                _baseTime = '2300'
+            }
+            console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>curr-->', curr)
+            console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>_baseTime-->', _baseTime)
+            return _baseTime
+        })();
         console.log('000-->', baseTime)
+
         const url = `${_this.address}?serviceKey=${apiKey}&numOfRows=${numOfRows}&pageNo=${pageNo}&dataType=${dataType}&base_date=${currentDate}&base_time=${baseTime}&nx=${nx}&ny=${ny}`;
         console.log(url)
         request(url, (error, response, body) => {
@@ -93,9 +125,45 @@ const weather = {
             if (error) {
             } else {
                 const _body = JSON.parse(body);
-                console.log( _body.response.body);
                 _this.body = _body.response.body ? _body.response.body.items.item : _body;
+                if(_this.body && _this.body.length !== 0){
+                    const initialValue = {}
+                    const insertData = _this.body.reduce((acc, item, index) => {
+                        if (initialValue.hasOwnProperty(item.category)) {
+                            return;
+                        } else {
+                            initialValue[item.category] = Number(item.fcstValue);
+                        }
+                        return item;
+                    }, initialValue);
+                    initialValue['base_time'] = baseTime;
+                    _this.upsdateWeatherUpData(initialValue);
+                }
             }
+        });
+    },
+    upsdateWeatherUpData(data) {
+        const _this = this;
+        const _query = `UPDATE tb_env SET ? WHERE env_index='HH2106001';`;
+
+        const updateData = {
+            ...data,
+            kma_record_date: moment().format('YYYY-MM-DD HH:mm:ss.SSS')
+        }
+        pool.getConnection((err, connection) => {
+            if (err) {
+                console.error(err);
+
+            } else {
+                connection.query(_query, updateData, (err, results, field) => {
+                    if (err) {
+                        console.error(err);
+                    } else {
+
+                    }
+                });
+            }
+            connection.release();
         });
     },
     getLocation() {
@@ -145,7 +213,6 @@ const weather = {
                         WHERE sido LIKE "%${kma_sido}%" 
                         AND gun LIKE "%${kma_gun}%";`;
 
-        console.log(_query_2)
         pool.getConnection((err, connection) => {
             if (err) {
                 console.error(err);
