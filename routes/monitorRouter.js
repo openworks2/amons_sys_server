@@ -21,8 +21,10 @@ router.get(
   "/monitors",
   async (req, res, next) => {
     try {
-      await connectionUtile.getFindAll({
+      await connectionUtile.getFindAllOrderByField({
         table: INFO_MONITOR_VIEW,
+        field:'local_id',
+        orderby: 'ASC',
         req,
         res,
       })();
