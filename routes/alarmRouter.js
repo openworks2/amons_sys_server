@@ -33,6 +33,41 @@ router.get(
     }
 );
 
+/**
+ * @description SOS알람 최근 발생 시간부터 20개 조회
+ * @params {Number} count 
+ */
+ router.get('/alarms/limit/:count', (req, res, next) => {
+
+    const { count } = req.params;
+
+    const _query = `SELECT * FROM ${LOG_EMERGENCY} ORDER BY emg_start_time DESC LIMIT ${count}`;
+
+    pool.getConnection((err, connection) => {
+        if (err) {
+            console.error(err);
+            res
+                .status(404)
+                .json({ status: 404, message: "Pool getConnection Error" });
+        } else {
+            connection.query(
+                _query,
+                (err, results, field) => {
+                    if (err) {
+                        console.error(err);
+                        res
+                            .status(404)
+                            .json({ status: 404, message: "Connection Query Error" });
+                    } else {
+                        console.log(results)
+                        res.json(results);
+                    }
+                }
+            );
+        }
+        connection.release();
+    });
+});
 
 /**
  * @description SOS알람 노선 및 기간별 조회
