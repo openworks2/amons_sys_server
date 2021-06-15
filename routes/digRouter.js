@@ -19,10 +19,27 @@ moment.tz.setDefault("Asiz/Seoul");
 
 const LOG_DIG = "log_dig";
 
+// router.get("/digs", async (req, res, next) => {
+//   try {
+//     await connectionUtile.getFindAll({
+//       table: LOG_DIG,
+//       req,
+//       res,
+//     })();
+//   } catch (error) {
+//     console.error(error);
+//     res
+//       .status(404)
+//       .json({ status: 404, message: "CallBack Async Function Error" });
+//   }
+// });
+
 router.get("/digs", async (req, res, next) => {
   try {
-    await connectionUtile.getFindAll({
+    await connectionUtile.getFindAllOrderByField({
       table: LOG_DIG,
+      field: 'record_date',
+      orderby: 'ASC',
       req,
       res,
     })();
