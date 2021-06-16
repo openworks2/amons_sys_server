@@ -93,15 +93,18 @@ io.on("connection", function (socket) {
     console.log('User has disconnected');
   });
 
-  let intervalId=undefined;
+  let intervalId = undefined;
+
+
   socket.on("getData", (data) => {
     if (!intervalId) {
+
       intervalId = setInterval(function () {
         // console.log('>>>socket interval!!!')
         // socket.emit("getData", portScanner.items);
         socket.emit("getData", {
-            scanner:portScanner.items,
-            beacon:bleConfig.items
+          scanner: portScanner.items,
+          beacon: bleConfig.items
         });
       }, 5000);
     } else {

@@ -275,14 +275,15 @@ router.post('/bles/input/vehicle/search', (req, res, next) => {
     const { body: reqBody } = req;
     const { local_index = null, from_date, to_date, name = null, co_index = null } = reqBody;
 
-    const _query = `SELECT * FROM ble_input_beacon_view
-                    WHERE DATE_FORMAT(bc_input_time,"%Y-%m-%d %H:%i:%S") 
+    const _query = `SELECT * FROM ${LOG_BLE_VEHICLE} 
+                    WHERE DATE_FORMAT(ble_input_time,"%Y-%m-%d %H:%i:%S") 
                     BETWEEN DATE_FORMAT("${from_date}","%Y-%m-%d %H:%i:%S")
                     AND DATE_FORMAT("${to_date}","%Y-%m-%d %H:%i:%S")
                     ${local_index !== null ? `AND local_index='${local_index}'` : ``}
-                    ${co_index !== null ? `AND co_index = "${co_index}"` : ``}
                     ${name !== null ? `AND name LIKE '%${name}%'` : ``}
-                    ORDER BY bc_input_time DESC;`;
+                    ${co_index !== null ? `AND co_index = "${co_index}"` : ``}
+                    ORDER BY ble_input_time DESC;`;
+                    console.log(_query)
     pool.getConnection((err, connection) => {
         if (err) {
             console.error(err);
@@ -374,6 +375,7 @@ router.post('/bles/worker/download', (req, res, next) => {
                     ${name !== null ? `AND name LIKE '%${name}%'` : ``}
                     ${co_index !== null ? `AND co_index = "${co_index}"` : ``}
                     ORDER BY ble_input_time DESC;`;
+                    
     pool.getConnection((err, connection) => {
         if (err) {
             console.error(err);

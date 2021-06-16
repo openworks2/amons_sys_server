@@ -163,9 +163,9 @@ const weather = {
                     } else {
 
                     }
+                    connection.release();
                 });
             }
-            connection.release();
         });
     },
     getLocation() {
@@ -193,9 +193,9 @@ const weather = {
                        
                         _this.requestHandler();
                     }
+                    connection.release();
                 });
             }
-            connection.release();
         });
     },
     changLocation(obj) {
@@ -227,9 +227,9 @@ const weather = {
                         _this.getLocation();
 
                     }
+                    connection.release();
                 });
             }
-            connection.release();
         });
     },
     scheduleAction() {
