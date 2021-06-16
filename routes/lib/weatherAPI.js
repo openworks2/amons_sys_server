@@ -16,7 +16,7 @@ const weather = {
         numOfRows: 10,
         pageNo: 1,
         dataType: 'JSON',
-        currentData: moment().format("YYYYMMDD"),
+        currentData: null,
         baseTime: moment().format('HH00'),
         nx: 55,
         ny: 127,
@@ -79,7 +79,7 @@ const weather = {
         const numOfRows = _this.options.numOfRows;
         const pageNo = _this.options.pageNo;
         const dataType = _this.options.dataType;
-        const currentDate = _this.options.currentData;
+        const currentDate = moment().format("YYYYMMDD");
         // const baseTime = _this.options.baseTime;
         const nx = _this.location.local_x || 62;
         const ny = _this.location.local_y || 128;
@@ -114,7 +114,6 @@ const weather = {
         })();
 
         const url = `${_this.address}?serviceKey=${apiKey}&numOfRows=${numOfRows}&pageNo=${pageNo}&dataType=${dataType}&base_date=${currentDate}&base_time=${baseTime}&nx=${nx}&ny=${ny}`;
-        console.log('url-->',url)
         request(url, (error, response, body) => {
             console.error('error:', error); // Print the error if one occurred
             const statusCode = response && response.statusCode;
@@ -124,6 +123,10 @@ const weather = {
             } else {
                 const _body = JSON.parse(body);
                 console.log(_body)
+                if(!_body.response.body){
+                   console.log('NO Body:: ', _body.response.header)
+                    return;
+                }
                 _this.body = _body.response.body ? _body.response.body.items.item : _body;
                 if(_this.body && _this.body.length !== 0){
                     const initialValue = {}
