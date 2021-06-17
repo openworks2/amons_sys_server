@@ -91,17 +91,23 @@ io.on("connection", function (socket) {
 
   socket.on('disconnect', () => {
     console.log('User has disconnected');
+    const socketId = socket.id;
+    if(intervalId.hasOwnProperty(socketId)){
+      clearInterval(intervalId[socketId]);
+      delete intervalId[socketId];
+    }
   });
 
-  let intervalId = undefined;
-
+  let intervalId = {};
 
   socket.on("getData", (data) => {
-    if (!intervalId) {
-
-      intervalId = setInterval(function () {
-        // console.log('>>>socket interval!!!')
-        // socket.emit("getData", portScanner.items);
+    socket.emit("getData", {
+      scanner: portScanner.items || [],
+      beacon: bleConfig.items || []
+    });
+    const socketId = socket.id;
+    if (!intervalId.hasOwnProperty(socketId)) {
+      intervalId[socketId] = setInterval(function () {
         socket.emit("getData", {
           scanner: portScanner.items,
           beacon: bleConfig.items

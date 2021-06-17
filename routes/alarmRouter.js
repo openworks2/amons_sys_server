@@ -59,7 +59,7 @@ router.get(
                             .status(404)
                             .json({ status: 404, message: "Connection Query Error" });
                     } else {
-                        console.log(results)
+                        // console.log(results)
                         res.json(results);
                     }
                 }

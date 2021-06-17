@@ -283,7 +283,6 @@ router.post('/bles/input/vehicle/search', (req, res, next) => {
                     ${name !== null ? `AND name LIKE '%${name}%'` : ``}
                     ${co_index !== null ? `AND co_index = "${co_index}"` : ``}
                     ORDER BY ble_input_time DESC;`;
-                    console.log(_query)
     pool.getConnection((err, connection) => {
         if (err) {
             console.error(err);
