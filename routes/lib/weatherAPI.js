@@ -10,7 +10,8 @@ const pool = require("../config/connectionPool");
 
 const weather = {
     table: 'tb_kma_xy',
-    address: 'http://apis.data.go.kr/1360000/VilageFcstInfoService/getVilageFcst',
+    // address: 'http://apis.data.go.kr/1360000/VilageFcstInfoService/getVilageFcst',
+    address: 'http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst',
     options: {
         apiKey: '1TXTVjV4gePgEweDA90Gn4cYcr1EApnaQGno3jDAb6qRHxrOIP0BAdDwFVn8%2Ft2%2BOxRMMvLXElqcPR918MfMKw%3D%3D',
         numOfRows: 10,
@@ -113,32 +114,45 @@ const weather = {
             return _baseTime
         })();
 
+        // let baseTime='2000'
         const url = `${_this.address}?serviceKey=${apiKey}&numOfRows=${numOfRows}&pageNo=${pageNo}&dataType=${dataType}&base_date=${currentDate}&base_time=${baseTime}&nx=${nx}&ny=${ny}`;
+        console.log(url)
         request(url, (error, response, body) => {
-            console.error('error:', error); // Print the error if one occurred
             const statusCode = response && response.statusCode;
             console.error('statusCode:', statusCode);
             if (error) {
-                console.error('error:', error);            
+                console.error('error:', error);
             } else {
-                const _body = JSON.parse(body);
-                console.log(_body)
-                if(!_body.response.body){
-                   console.log('NO Body:: ', _body.response.header)
+                let _body;
+                try {
+                    _body = JSON.parse(body);
+                } catch (e) {
+                    return;
+                }
+                if (!_body.response.body) {
+                    console.log('NO Body:: ', _body.response.header)
                     return;
                 }
                 _this.body = _body.response.body ? _body.response.body.items.item : _body;
-                if(_this.body && _this.body.length !== 0){
+                if (_this.body && _this.body.length !== 0) {
                     const initialValue = {}
                     const insertData = _this.body.reduce((acc, item, index) => {
                         if (initialValue.hasOwnProperty(item.category)) {
                             return;
                         } else {
-                            initialValue[item.category] = Number(item.fcstValue);
+                            const _number = Number(item.fcstValue);
+                            const _isNaN = isNaN(_number);
+                            if (_isNaN) {
+                                initialValue[item.category] = item.fcstValue;
+                            } else {
+                                initialValue[item.category] = Number(item.fcstValue);
+                            }
+
                         }
                         return item;
                     }, initialValue);
                     initialValue['base_time'] = baseTime;
+
                     _this.upsdateWeatherUpData(initialValue);
                 }
             }
@@ -147,7 +161,7 @@ const weather = {
     upsdateWeatherUpData(data) {
         const _this = this;
         const _query = `UPDATE tb_env SET ? WHERE env_index='HH2106001';`;
-
+        
         const updateData = {
             ...data,
             kma_record_date: moment().format('YYYY-MM-DD HH:mm:ss.SSS')
@@ -190,7 +204,7 @@ const weather = {
                             local_x,
                             local_y
                         }
-                       
+
                         _this.requestHandler();
                     }
                     connection.release();
