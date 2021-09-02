@@ -233,7 +233,9 @@ router.post('/bles/input/worker/search', (req, res, next) => {
                     ${local_index !== null ? `AND local_index='${local_index}'` : ``}
                     ${name !== null ? `AND name LIKE '%${name}%'` : ``}
                     ${co_index !== null ? `AND co_index = "${co_index}"` : ``}
+                    AND ble_out_time IS NULL
                     ORDER BY ble_input_time DESC;`;
+    console.log(_query);
     pool.getConnection((err, connection) => {
         if (err) {
             console.error(err);
@@ -282,6 +284,7 @@ router.post('/bles/input/vehicle/search', (req, res, next) => {
                     ${local_index !== null ? `AND local_index='${local_index}'` : ``}
                     ${name !== null ? `AND name LIKE '%${name}%'` : ``}
                     ${co_index !== null ? `AND co_index = "${co_index}"` : ``}
+                    AND ble_out_time IS NULL
                     ORDER BY ble_input_time DESC;`;
     pool.getConnection((err, connection) => {
         if (err) {
